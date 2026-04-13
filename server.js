@@ -126,16 +126,21 @@ RULES:
 - When escalating to the team always use: <a href="mailto:hello@everformwear.com">email our team</a>
 - Never leave a customer feeling stuck — always provide a human fallback option
 
-ESCALATE TO HUMAN for: specific order issues, damaged items, policy exceptions, or anything you cannot resolve. Always use: <a href="mailto:hello@everformwear.com">email our team</a>`;
+ESCALATE TO HUMAN for: specific order issues, damaged items, policy exceptions, or anything you cannot resolve. Always use: <a href="mailto:hello@everformwear.com">email our team</a>
 
+GORGIAS EMAIL REPLIES:
+When drafting replies for Gorgias email tickets, write in plain warm professional English. Start with a greeting using the customer name if available. Sign off with:
+"Warm regards,
+Evie
+Everform Customer Care"`;
+
+// CHAT ENDPOINT (Shopify widget)
 app.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
-
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Missing messages' });
     }
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -150,18 +155,87 @@ app.post('/chat', async (req, res) => {
         messages: messages
       })
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data });
-    }
-
+    if (!response.ok) return res.status(response.status).json({ error: data });
     const reply = data?.content?.[0]?.text || '';
     res.json({ reply });
+  } catch (err) {
+    console.error('Chat error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GORGIAS WEBHOOK ENDPOINT
+app.post('/gorgias-webhook', async (req, res) => {
+  try {
+    const ticket = req.body;
+    const ticketId = ticket.id;
+    const customerMessage = ticket.messages?.[0]?.body_text || ticket.messages?.[0]?.body_html || '';
+    const customerName = ticket.customer?.name || 'there';
+    const customerFirstName = customerName.split(' ')[0];
+
+    if (!ticketId || !customerMessage) {
+      return res.status(400).json({ error: 'Missing ticket data' });
+    }
+
+    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: `Draft a reply to this customer email. Customer name: ${customerFirstName}. Their message: ${customerMessage}`
+          }
+        ]
+      })
+    });
+
+    const claudeData = await claudeResponse.json();
+    const draftReply = claudeData?.content?.[0]?.text || '';
+
+    if (!draftReply) {
+      return res.status(500).json({ error: 'No reply generated' });
+    }
+
+    const gorgiasResponse = await fetch(
+      `https://everformwear.gorgias.com/api/tickets/${ticketId}/messages`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + Buffer.from(
+            `${process.env.GORGIAS_EMAIL}:${process.env.GORGIAS_API_KEY}`
+          ).toString('base64')
+        },
+        body: JSON.stringify({
+          body_html: draftReply.replace(/\n/g, '<br>'),
+          body_text: draftReply,
+          source: { type: 'email' },
+          via: 'helpdesk',
+          is_draft: true
+        })
+      }
+    );
+
+    const gorgiasData = await gorgiasResponse.json();
+    if (!gorgiasResponse.ok) {
+      console.error('Gorgias error:', gorgiasData);
+      return res.status(gorgiasResponse.status).json({ error: gorgiasData });
+    }
+
+    console.log(`Draft created for ticket ${ticketId}`);
+    res.json({ success: true, ticketId });
 
   } catch (err) {
-    console.error('Server error:', err);
+    console.error('Gorgias webhook error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
