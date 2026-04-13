@@ -259,13 +259,22 @@ app.post('/gorgias-webhook', async (req, res) => {
           'Content-Type': 'application/json',
           'Authorization': gorgiasAuth
         },
-        body: JSON.stringify({
+        y_html: draftReply.replace(/\n/g, '<br>'),
+       body: JSON.stringify({
           body_html: draftReply.replace(/\n/g, '<br>'),
           body_text: draftReply,
-          source: { type: 'email' },
+          channel: 'email',
+          from_agent: true,
           via: 'helpdesk',
-          is_draft: true
-        })
+          is_draft: true,
+          source: {
+            type: 'email',
+            from: {
+              address: 'hello@everformwear.com',
+              name: 'Evie - Everform Customer Care'
+            }
+          }
+        })  
       }
     );
 
