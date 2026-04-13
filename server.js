@@ -264,10 +264,8 @@ app.post('/gorgias-webhook', async (req, res) => {
           body_html: draftReply.replace(/\n/g, '<br>'),
           body_text: draftReply,
           channel: 'email',
-          from_agent: true,
-          is_draft: true
+          from_agent: true
         })
-      }
     );
 
     const draftData = await draftResponse.json();
