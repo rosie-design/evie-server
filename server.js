@@ -265,16 +265,8 @@ app.post('/gorgias-webhook', async (req, res) => {
           body_text: draftReply,
           channel: 'email',
           from_agent: true,
-          via: 'helpdesk',
-          is_draft: true,
-          source: {
-            type: 'email',
-            from: {
-              address: 'hello@everformwear.com',
-              name: 'Evie - Everform Customer Care'
-            }
-          }
-        })  
+          is_draft: true
+        })
       }
     );
 
