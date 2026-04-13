@@ -168,16 +168,61 @@ app.post('/chat', async (req, res) => {
 // GORGIAS WEBHOOK ENDPOINT
 app.post('/gorgias-webhook', async (req, res) => {
   try {
-    const ticket = req.body;
-    const ticketId = ticket.id;
-    const customerMessage = ticket.messages?.[0]?.body_text || ticket.messages?.[0]?.body_html || '';
-    const customerName = ticket.customer?.name || 'there';
-    const customerFirstName = customerName.split(' ')[0];
+    const { ticket_id } = req.body;
 
-    if (!ticketId || !customerMessage) {
-      return res.status(400).json({ error: 'Missing ticket data' });
+    if (!ticket_id) {
+      return res.status(400).json({ error: 'Missing ticket_id' });
     }
 
+    const gorgiasAuth = 'Basic ' + Buffer.from(
+      `${process.env.GORGIAS_EMAIL}:${process.env.GORGIAS_API_KEY}`
+    ).toString('base64');
+
+    // Fetch full ticket from Gorgias
+    const ticketResponse = await fetch(
+      `https://everformwear.gorgias.com/api/tickets/${ticket_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': gorgiasAuth
+        }
+      }
+    );
+
+    const ticket = await ticketResponse.json();
+
+    if (!ticketResponse.ok) {
+      console.error('Failed to fetch ticket:', ticket);
+      return res.status(400).json({ error: 'Could not fetch ticket from Gorgias' });
+    }
+
+    // Fetch ticket messages
+    const messagesResponse = await fetch(
+      `https://everformwear.gorgias.com/api/tickets/${ticket_id}/messages`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': gorgiasAuth
+        }
+      }
+    );
+
+    const messagesData = await messagesResponse.json();
+    const messages = messagesData?.data || [];
+
+    // Get the first customer message
+    const customerMsg = messages.find(m => m.from_agent === false);
+    const customerMessage = customerMsg?.body_text || customerMsg?.body_html || '';
+    const customerName = ticket?.customer?.name || 'there';
+    const customerFirstName = customerName.split(' ')[0];
+
+    if (!customerMessage) {
+      return res.status(400).json({ error: 'No customer message found' });
+    }
+
+    // Ask Claude to draft a reply
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -205,15 +250,14 @@ app.post('/gorgias-webhook', async (req, res) => {
       return res.status(500).json({ error: 'No reply generated' });
     }
 
-    const gorgiasResponse = await fetch(
-      `https://everformwear.gorgias.com/api/tickets/${ticketId}/messages`,
+    // Post draft reply to Gorgias
+    const draftResponse = await fetch(
+      `https://everformwear.gorgias.com/api/tickets/${ticket_id}/messages`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + Buffer.from(
-            `${process.env.GORGIAS_EMAIL}:${process.env.GORGIAS_API_KEY}`
-          ).toString('base64')
+          'Authorization': gorgiasAuth
         },
         body: JSON.stringify({
           body_html: draftReply.replace(/\n/g, '<br>'),
@@ -225,14 +269,15 @@ app.post('/gorgias-webhook', async (req, res) => {
       }
     );
 
-    const gorgiasData = await gorgiasResponse.json();
-    if (!gorgiasResponse.ok) {
-      console.error('Gorgias error:', gorgiasData);
-      return res.status(gorgiasResponse.status).json({ error: gorgiasData });
+    const draftData = await draftResponse.json();
+
+    if (!draftResponse.ok) {
+      console.error('Gorgias draft error:', draftData);
+      return res.status(draftResponse.status).json({ error: draftData });
     }
 
-    console.log(`Draft created for ticket ${ticketId}`);
-    res.json({ success: true, ticketId });
+    console.log(`Draft created for ticket ${ticket_id}`);
+    res.json({ success: true, ticket_id });
 
   } catch (err) {
     console.error('Gorgias webhook error:', err);
