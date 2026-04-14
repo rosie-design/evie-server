@@ -280,7 +280,9 @@ app.post('/gorgias-webhook', async (req, res) => {
           body_html: draftReply.replace(/\n/g, '<br>'),
           body_text: draftReply,
           channel: 'email',
-          from_agent: true
+          from_agent: true,
+          via: 'api',
+          sender: { email: 'hello@everformwear.com' }
         })
       }
     );
