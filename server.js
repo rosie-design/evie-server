@@ -276,14 +276,19 @@ app.post('/gorgias-webhook', async (req, res) => {
           'Content-Type': 'application/json',
           'Authorization': gorgiasAuth
         },
-        body: JSON.stringify({
+     body: JSON.stringify({
           body_html: draftReply.replace(/\n/g, '<br>'),
           body_text: draftReply,
           channel: 'email',
           from_agent: true,
           via: 'api',
-          sender: { email: 'hello@everformwear.com' }
-        })
+          sender: { email: 'hello@everformwear.com' },
+          source: {
+            from: { address: 'hello@everformwear.com' },
+            to: [ { address: ticket.customer.email } ]
+          }
+        })  
+      
       }
     );
 
