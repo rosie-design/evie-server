@@ -227,10 +227,23 @@ app.post('/chat', async (req, res) => {
 });
 
 app.post('/gorgias-webhook', async (req, res) => {
-  try {
-    const ticket_id = String(req.body.ticket_id);
-    if (!ticket_id) return res.status(400).json({ error: 'Missing ticket_id' });
+  const ticket_id = String(req.body.ticket_id || '');
 
+  if (!ticket_id || ticket_id === 'undefined') {
+    return res.status(400).json({ error: 'Missing ticket_id' });
+  }
+
+  // Respond to Gorgias immediately so it does not time out
+  res.json({ success: true, ticket_id: ticket_id });
+
+  // Process Evie reply in background
+  processTicket(ticket_id).catch(function(err) {
+    console.error('Background processing error for ticket ' + ticket_id + ':', err);
+  });
+});
+
+async function processTicket(ticket_id) {
+  try {
     const gorgiasAuth = 'Basic ' + Buffer.from(
       process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
     ).toString('base64');
@@ -243,7 +256,7 @@ app.post('/gorgias-webhook', async (req, res) => {
     const ticket = await ticketResponse.json();
     if (!ticketResponse.ok) {
       console.error('Failed to fetch ticket:', ticket);
-      return res.status(400).json({ error: 'Could not fetch ticket' });
+      return;
     }
 
     // Fetch messages
@@ -254,7 +267,7 @@ app.post('/gorgias-webhook', async (req, res) => {
     const messagesData = await messagesResponse.json();
     const allMessages = messagesData.data || [];
 
-    // Find customer message — try from_agent false first, then fall back to any message
+    // Find customer message
     const customerMsg = allMessages.find(function(m) {
       return m.from_agent === false || m.from_agent === null || m.from_agent === undefined;
     });
@@ -269,7 +282,8 @@ app.post('/gorgias-webhook', async (req, res) => {
     const customerFirstName = customerName.split(' ')[0];
 
     if (!customerMessage || customerMessage.trim() === '') {
-      return res.status(400).json({ error: 'No customer message found' });
+      console.log('No customer message found for ticket ' + ticket_id);
+      return;
     }
 
     // Determine if escalation needed
@@ -314,7 +328,7 @@ app.post('/gorgias-webhook', async (req, res) => {
       });
     }
 
-    // Build escalation note for Claude
+    // Build escalation note
     var escalationNote = '';
     if (needsEscalation) {
       escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that a member of our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — the team will reach out directly.';
@@ -344,7 +358,10 @@ app.post('/gorgias-webhook', async (req, res) => {
     const claudeData = await claudeResponse.json();
     const draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
 
-    if (!draftReply) return res.status(500).json({ error: 'No reply generated' });
+    if (!draftReply) {
+      console.error('No reply generated for ticket ' + ticket_id);
+      return;
+    }
 
     // Post reply to Gorgias
     const draftResponse = await fetch(
@@ -369,18 +386,15 @@ app.post('/gorgias-webhook', async (req, res) => {
 
     const draftData = await draftResponse.json();
     if (!draftResponse.ok) {
-      console.error('Gorgias draft error:', JSON.stringify(draftData));
-      return res.status(draftResponse.status).json({ error: draftData });
+      console.error('Gorgias reply error:', JSON.stringify(draftData));
+    } else {
+      console.log('Reply sent for ticket ' + ticket_id);
     }
 
-    console.log('Reply sent for ticket ' + ticket_id);
-    res.json({ success: true, ticket_id: ticket_id });
-
   } catch (err) {
-    console.error('Gorgias webhook error:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('processTicket error for ' + ticket_id + ':', err);
   }
-});
+}
 
 app.get('/', function(req, res) { res.send('Evie server is running'); });
 
