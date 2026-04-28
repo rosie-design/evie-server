@@ -191,4 +191,198 @@ RULES:
 - Always give escalation timeframe: 24hrs weekdays, 48hrs weekends
 
 GORGIAS EMAIL REPLIES:
-Write in plain warm professional English. Use the provided macro as your te
+Write in plain warm professional English. Use the provided macro as your template if relevant — personalise to the customer. Replace {{customer.first_name}} with actual customer name. Sign off with:
+"Warm regards,
+Evie
+Everform Customer Care"`;
+
+app.post('/chat', async (req, res) => {
+  try {
+    const { messages } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: 'Missing messages' });
+    }
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: SYSTEM_PROMPT,
+        messages: messages
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) return res.status(response.status).json({ error: data });
+    const reply = data.content && data.content[0] ? data.content[0].text : '';
+    res.json({ reply });
+  } catch (err) {
+    console.error('Chat error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/gorgias-webhook', async (req, res) => {
+  try {
+    const ticket_id = req.body.ticket_id;
+    if (!ticket_id) return res.status(400).json({ error: 'Missing ticket_id' });
+
+    const gorgiasAuth = 'Basic ' + Buffer.from(
+      process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
+    ).toString('base64');
+
+    // Fetch ticket
+    const ticketResponse = await fetch(
+      'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
+      { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
+    );
+    const ticket = await ticketResponse.json();
+    if (!ticketResponse.ok) {
+      console.error('Failed to fetch ticket:', ticket);
+      return res.status(400).json({ error: 'Could not fetch ticket' });
+    }
+
+    // Fetch messages
+    const messagesResponse = await fetch(
+      'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
+      { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
+    );
+    const messagesData = await messagesResponse.json();
+    const allMessages = messagesData.data || [];
+
+    // Find customer message — try from_agent false first, then fall back to any message
+    const customerMsg = allMessages.find(function(m) {
+      return m.from_agent === false || m.from_agent === null || m.from_agent === undefined;
+    });
+    const allText = allMessages.map(function(m) {
+      return (m.body_text || m.body_html || '');
+    }).join(' ');
+    const customerMessage = customerMsg
+      ? (customerMsg.body_text || customerMsg.body_html || allText)
+      : allText;
+
+    const customerName = ticket.customer ? (ticket.customer.name || 'there') : 'there';
+    const customerFirstName = customerName.split(' ')[0];
+
+    if (!customerMessage || customerMessage.trim() === '') {
+      return res.status(400).json({ error: 'No customer message found' });
+    }
+
+    // Determine if escalation needed
+    const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
+    const followUpTime = isWeekend ? '48 hours' : '24 hours';
+
+    const needsEscalation =
+      /final.sale|faulty|damaged|defect|broken|wrong.item|policy.exception/i.test(customerMessage) ||
+      /track|where.*order|order.*status|no tracking|haven.t received|not received/i.test(customerMessage) ||
+      /lbl|pro support|brief/i.test(customerMessage);
+
+    // Tag ticket if escalation needed
+    if (needsEscalation) {
+      await fetch(
+        'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+          body: JSON.stringify({ tags: [{ name: 'Escalation' }] })
+        }
+      );
+      console.log('Tagged ticket ' + ticket_id + ' as Escalation');
+    }
+
+    // Fetch macros
+    const macrosResponse = await fetch(
+      'https://everformwear.gorgias.com/api/macros?limit=50',
+      { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
+    );
+    const macrosData = await macrosResponse.json();
+    const macros = macrosData.data || [];
+
+    // Build macro context
+    var macroContext = '';
+    if (macros.length > 0) {
+      macroContext = 'AVAILABLE MACROS (use the most relevant one as your template, personalise to this customer, replace {{customer.first_name}} with ' + customerFirstName + '):\n\n';
+      macros.forEach(function(macro) {
+        if (macro.body_html || macro.body_text) {
+          macroContext += '--- MACRO: ' + macro.name + ' ---\n';
+          macroContext += (macro.body_text || macro.body_html || '') + '\n\n';
+        }
+      });
+    }
+
+    // Build escalation note for Claude
+    var escalationNote = '';
+    if (needsEscalation) {
+      escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that a member of our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — the team will reach out directly.';
+    }
+
+    // Ask Claude to draft reply
+    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: macroContext + 'Draft a reply to this customer email. Customer name: ' + customerFirstName + '. Their message: ' + customerMessage + escalationNote
+          }
+        ]
+      })
+    });
+
+    const claudeData = await claudeResponse.json();
+    const draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
+
+    if (!draftReply) return res.status(500).json({ error: 'No reply generated' });
+
+    // Post reply to Gorgias
+    const draftResponse = await fetch(
+      'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+        body: JSON.stringify({
+          body_html: draftReply.replace(/\n/g, '<br>'),
+          body_text: draftReply,
+          channel: 'email',
+          from_agent: true,
+          via: 'api',
+          sender: { email: 'hello@everformwear.com' },
+          source: {
+            from: { address: 'hello@everformwear.com' },
+            to: [{ address: ticket.customer ? ticket.customer.email : '' }]
+          }
+        })
+      }
+    );
+
+    const draftData = await draftResponse.json();
+    if (!draftResponse.ok) {
+      console.error('Gorgias draft error:', JSON.stringify(draftData));
+      return res.status(draftResponse.status).json({ error: draftData });
+    }
+
+    console.log('Reply sent for ticket ' + ticket_id);
+    res.json({ success: true, ticket_id: ticket_id });
+
+  } catch (err) {
+    console.error('Gorgias webhook error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/', function(req, res) { res.send('Evie server is running'); });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, function() { console.log('Evie server running on port ' + PORT); });
