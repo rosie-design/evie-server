@@ -228,7 +228,7 @@ app.post('/chat', async (req, res) => {
 
 app.post('/gorgias-webhook', async (req, res) => {
   try {
-    const ticket_id = req.body.ticket_id;
+    const ticket_id = String(req.body.ticket_id);
     if (!ticket_id) return res.status(400).json({ error: 'Missing ticket_id' });
 
     const gorgiasAuth = 'Basic ' + Buffer.from(
