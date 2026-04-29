@@ -196,6 +196,44 @@ Write in plain warm professional English. Use the provided macro as your templat
 Evie
 Everform Customer Care"`;
 
+// Auto-reply detection
+function isAutoReply(subject, body) {
+  var autoReplyPatterns = [
+    /out of office/i,
+    /out-of-office/i,
+    /auto.?reply/i,
+    /automatic.?reply/i,
+    /automated.?reply/i,
+    /away from (the )?office/i,
+    /on leave/i,
+    /on vacation/i,
+    /annual leave/i,
+    /maternity leave/i,
+    /currently away/i,
+    /currently out/i,
+    /i am away/i,
+    /i'm away/i,
+    /i will be (out|away|unavailable)/i,
+    /unsubscribe/i,
+    /do not reply/i,
+    /do-not-reply/i,
+    /noreply/i,
+    /no-reply/i,
+    /this is an automated/i,
+    /this email was sent automatically/i,
+    /please do not respond/i,
+    /delivery (status )?notification/i,
+    /mail delivery failed/i,
+    /returned mail/i,
+    /bounce/i
+  ];
+
+  var combined = (subject || '') + ' ' + (body || '');
+  return autoReplyPatterns.some(function(pattern) {
+    return pattern.test(combined);
+  });
+}
+
 app.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
@@ -278,11 +316,18 @@ async function processTicket(ticket_id) {
       ? (customerMsg.body_text || customerMsg.body_html || allText)
       : allText;
 
+    const ticketSubject = ticket.subject || '';
     const customerName = ticket.customer ? (ticket.customer.name || 'there') : 'there';
     const customerFirstName = customerName.split(' ')[0];
 
     if (!customerMessage || customerMessage.trim() === '') {
       console.log('No customer message found for ticket ' + ticket_id);
+      return;
+    }
+
+    // Skip auto-replies
+    if (isAutoReply(ticketSubject, customerMessage)) {
+      console.log('Skipping auto-reply ticket ' + ticket_id);
       return;
     }
 
