@@ -24,7 +24,7 @@ ESCALATE for:
 4. Policy exception requests
 5. Anything Evie cannot fully resolve
 
-NEVER say "email our team" for escalation scenarios — the ticket is already in the system and the team will follow up directly.
+NEVER say "email our team" for escalation scenarios — the ticket is already in the system and Christine will follow up directly.
 
 STORE:
 - Website: everformwear.com.au
@@ -74,7 +74,7 @@ FINAL SALE ITEMS — CRITICAL:
 - Items marked Final Sale at checkout are NOT eligible for return, exchange OR store credit under ANY circumstances
 - NEVER direct Final Sale customers to the returns portal
 - Respond with empathy, explain the Final Sale policy clearly
-- Always escalate — team will follow up within 24hrs (48hrs weekends)
+- Always escalate — Christine will follow up within 24hrs (48hrs weekends)
 
 BUNDLE PURCHASES:
 - Full refunds available ONLY when ALL items in the bundle are returned together
@@ -92,7 +92,7 @@ MOTHER'S DAY GIFTING (purchases between 21 April and 9 May 2026):
 
 FAULTY ITEMS:
 - Must contact within 7 days of receiving
-- Always escalate — team will follow up within 24hrs (48hrs weekends)
+- Always escalate — Christine will follow up within 24hrs (48hrs weekends)
 - Never attempt to resolve faulty item claims without human review
 
 TRY BEFORE YOU BUY (Try with Mirra):
@@ -172,12 +172,12 @@ Wholesale Program - Stock products in clinic at reduced health professional rate
 
 IF AFFILIATE or BOTH:
 - Sign up: <a href="https://app.impact.com/campaign-promo-signup/Everform-Therapywear.brand?execution=e1s1" target="_blank">Sign up for the Affiliate Program</a>
-- Christine can help: <a href="mailto:hello@everformwear.com">email Christine</a>
+- Christine can help: <a href="mailto:christine@everformwear.com">email Christine</a>
 - Book training call with Rosie: <a href="https://calendly.com/rosieeverform/30min" target="_blank">Book a call with Rosie</a>
 
 IF WHOLESALE or BOTH:
 - Sign up: <a href="https://everformwear.com.au/pages/ws-account-create" target="_blank">Sign up for the Wholesale Program</a>
-- For more info: <a href="mailto:hello@everformwear.com">email our team</a>
+- For more info: <a href="mailto:christine@everformwear.com">email our team</a>
 
 RULES:
 - Keep replies to 2-4 sentences unless more detail is needed
@@ -187,7 +187,7 @@ RULES:
 - If unsure, say so honestly
 - Always close warmly
 - Always format links as HTML anchor tags
-- Never tell escalation customers to email — the team will follow up directly
+- Never tell escalation customers to email — Christine will follow up directly
 - Always give escalation timeframe: 24hrs weekdays, 48hrs weekends
 
 GORGIAS EMAIL REPLIES:
@@ -196,8 +196,8 @@ Write in plain warm professional English. Use the provided macro as your templat
 Evie
 Everform Customer Care"`;
 
-// Auto-reply detection
-function isAutoReply(subject, body) {
+// Auto-reply and non-customer email detection
+function shouldSkip(subject, body, senderEmail) {
   var autoReplyPatterns = [
     /out of office/i,
     /out-of-office/i,
@@ -214,7 +214,6 @@ function isAutoReply(subject, body) {
     /i am away/i,
     /i'm away/i,
     /i will be (out|away|unavailable)/i,
-    /unsubscribe/i,
     /do not reply/i,
     /do-not-reply/i,
     /noreply/i,
@@ -225,13 +224,60 @@ function isAutoReply(subject, body) {
     /delivery (status )?notification/i,
     /mail delivery failed/i,
     /returned mail/i,
-    /bounce/i
+    /unsubscribe/i
   ];
 
-  var combined = (subject || '') + ' ' + (body || '');
-  return autoReplyPatterns.some(function(pattern) {
-    return pattern.test(combined);
-  });
+  var nonCustomerPatterns = [
+    /partnership/i,
+    /collaboration/i,
+    /influencer/i,
+    /ambassador/i,
+    /press release/i,
+    /media enquiry/i,
+    /marketing proposal/i,
+    /advertising opportunity/i,
+    /sponsored/i,
+    /brand deal/i,
+    /pr opportunity/i,
+    /newsletter/i,
+    /campaign proposal/i,
+    /link building/i,
+    /seo (services|proposal|offer)/i,
+    /guest post/i,
+    /content marketing/i,
+    /digital marketing (agency|services)/i,
+    /we (can help|specialise|offer)/i,
+    /our (agency|company|team) (can|offers|provides|specialises)/i,
+    /impact.com/i,
+    /affiliate (platform|network|program notification)/i,
+    /commission (payment|notification)/i,
+    /your (invoice|statement|account)/i,
+    /supplier/i,
+    /wholesale (inquiry|enquiry|order)/i,
+    /bulk order/i,
+    /trade (inquiry|enquiry|account)/i
+  ];
+
+  var combined = (subject || '') + ' ' + (body || '') + ' ' + (senderEmail || '');
+
+  if (autoReplyPatterns.some(function(p) { return p.test(combined); })) {
+    return { skip: true, reason: 'auto-reply' };
+  }
+
+  if (nonCustomerPatterns.some(function(p) { return p.test(combined); })) {
+    return { skip: true, reason: 'non-customer' };
+  }
+
+  // Skip known no-reply sender domains
+  if (senderEmail) {
+    var skipDomains = ['noreply', 'no-reply', 'donotreply', 'do-not-reply', 'notifications', 'mailer-daemon'];
+    var emailLower = senderEmail.toLowerCase();
+    if (skipDomains.some(function(d) { return emailLower.includes(d); })) {
+      return { skip: true, reason: 'no-reply sender' };
+    }
+  }
+
+  return { skip: false };
 }
 
 app.post('/chat', async (req, res) => {
@@ -319,15 +365,30 @@ async function processTicket(ticket_id) {
     const ticketSubject = ticket.subject || '';
     const customerName = ticket.customer ? (ticket.customer.name || 'there') : 'there';
     const customerFirstName = customerName.split(' ')[0];
+    const customerEmail = ticket.customer ? (ticket.customer.email || '') : '';
 
     if (!customerMessage || customerMessage.trim() === '') {
       console.log('No customer message found for ticket ' + ticket_id);
       return;
     }
 
-    // Skip auto-replies
-    if (isAutoReply(ticketSubject, customerMessage)) {
-      console.log('Skipping auto-reply ticket ' + ticket_id);
+    // Check if should skip
+    var skipCheck = shouldSkip(ticketSubject, customerMessage, customerEmail);
+    if (skipCheck.skip) {
+      console.log('Skipping ticket ' + ticket_id + ' — reason: ' + skipCheck.reason);
+
+      // Tag non-customer emails for Christine to review
+      if (skipCheck.reason === 'non-customer') {
+        await fetch(
+          'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
+          {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+            body: JSON.stringify({ tags: [{ name: 'Christine-Review' }] })
+          }
+        );
+        console.log('Tagged ticket ' + ticket_id + ' for Christine review');
+      }
       return;
     }
 
@@ -376,7 +437,7 @@ async function processTicket(ticket_id) {
     // Build escalation note
     var escalationNote = '';
     if (needsEscalation) {
-      escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that a member of our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — the team will reach out directly.';
+      escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that a member of our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — Christine will reach out directly.';
     }
 
     // Ask Claude to draft reply
@@ -423,7 +484,7 @@ async function processTicket(ticket_id) {
           sender: { email: 'hello@everformwear.com' },
           source: {
             from: { address: 'hello@everformwear.com' },
-            to: [{ address: ticket.customer ? ticket.customer.email : '' }]
+            to: [{ address: customerEmail }]
           }
         })
       }
