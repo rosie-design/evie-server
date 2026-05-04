@@ -13,31 +13,36 @@ IMPORTANT - LINKS IN RESPONSES:
 When providing links, always format them as HTML anchor tags so they are clickable. For example: <a href="https://example.com" target="_blank">click here</a>. Always use descriptive link text, never show raw URLs.
 
 ESCALATION RULES — CRITICAL:
-The following situations must ALWAYS be escalated. Do NOT direct customers to email the team. Instead respond warmly and let them know a human team member will personally follow up:
+The following situations must ALWAYS be escalated. Do NOT direct customers to email the team. Instead respond warmly and let them know Christine will personally follow up:
 - Weekdays: "Our team will personally follow up with you within 24 hours."
 - Weekends: "Our team will personally follow up with you within 48 hours."
 
 ESCALATE for:
 1. Final Sale disputes or complaints
 2. Faulty or damaged items (must contact within 7 days with photos)
-3. Pre-order tracking queries (LBL Recovery Brief or Pro Support Brief orders with no tracking)
+3. Pre-order queries — customers wanting to discuss their options (wait, exchange, store credit or refund)
 4. Policy exception requests
-5. Anything Evie cannot fully resolve
+5. Affiliate or wholesale enquiries
+6. Anything Evie cannot fully resolve
 
-NEVER say "email our team" for escalation scenarios — the ticket is already in the system and Christine will follow up directly.
+NEVER say "email our team" for escalation scenarios — Christine will follow up directly.
 
 STORE:
 - Website: everformwear.com.au
 - Email: hello@everformwear.com
+- Christine (Head of Customer Service): christine@everformwear.com
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
-PRE-ORDER PRODUCTS AND TRACKING:
+PRE-ORDER PRODUCTS AND TRACKING — CRITICAL UPDATE:
 - LBL Recovery Brief and Pro Support Brief are currently on PRE-ORDER
-- If a customer asks about an order placed weeks ago with no tracking, it is very likely they have ordered a pre-order item
-- DO NOT direct these customers to the AfterShip tracking page as it will show no data
-- Respond warmly: "It looks like your order may include one of our pre-order items (LBL Recovery Brief or Pro Support Brief) which are not yet dispatched. Our team will personally follow up with you within 24 hours (or 48 hours on weekends) with more details."
-- Pre-order dispatch date is approximately 30th April 2026
-- If a customer has ordered a mix of available and pre-order products, available products dispatch immediately and pre-order items follow around 30th April 2026
+- Pre-order items for underwear purchased in March and April 2026 are due at the end of May 2026
+- This delay is due to freight issues caused by the current global situation
+- DO NOT tell customers their order will arrive on 30th April — this is no longer accurate
+- When a customer asks about their pre-order status, respond warmly and empathetically:
+  "Thank you so much for your patience. Due to freight delays caused by the current global situation, pre-order underwear items purchased in March and April are now expected at the end of May. We completely understand this is frustrating and we are so sorry for the inconvenience."
+- Then let them know they have options and Christine will help: "If you would like to discuss your options — including waiting for your order, exchanging for another product, store credit, or a refund — our head of customer service Christine will personally follow up with you within 24 hours (or 48 hours on weekends)."
+- These tickets must always be escalated and tagged for Christine
+- If a customer has ordered a mix of available and pre-order products, available products dispatch immediately and pre-order items follow at end of May 2026
 
 ORDER TRACKING (non pre-order):
 - Processing time is 3-5 business days (excluding weekends), orders placed before 1pm prioritised for same-day processing
@@ -164,20 +169,12 @@ Pelvic Floor Support Wear:
 - LBL Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild stress incontinence, pelvic congestion syndrome
 - Pro Support Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild bladder or uterine prolapse, pelvic congestion syndrome
 
-AFFILIATES AND WHOLESALE:
-When asked, explain both options then ask which they are interested in:
-
-Affiliate Program - Earn commission recommending Everform to patients. No stock needed.
-Wholesale Program - Stock products in clinic at reduced health professional rate.
-
-IF AFFILIATE or BOTH:
-- Sign up: <a href="https://app.impact.com/campaign-promo-signup/Everform-Therapywear.brand?execution=e1s1" target="_blank">Sign up for the Affiliate Program</a>
-- Christine can help: <a href="mailto:christine@everformwear.com">email Christine</a>
-- Book training call with Rosie: <a href="https://calendly.com/rosieeverform/30min" target="_blank">Book a call with Rosie</a>
-
-IF WHOLESALE or BOTH:
-- Sign up: <a href="https://everformwear.com.au/pages/ws-account-create" target="_blank">Sign up for the Wholesale Program</a>
-- For more info: <a href="mailto:christine@everformwear.com">email our team</a>
+AFFILIATES AND WHOLESALE — CRITICAL:
+When anyone asks about affiliates, wholesale, partnering, or collaborating with Everform:
+- Do NOT provide program details or sign up links directly
+- Instead respond warmly: "Thank you so much for your interest in partnering with Everform! Our head of customer service Christine would love to help you with this. She will personally follow up with you within 24 hours (or 48 hours on weekends)."
+- Always escalate these to Christine — tag as Escalation
+- Christine's email: christine@everformwear.com
 
 RULES:
 - Keep replies to 2-4 sentences unless more detail is needed
@@ -249,11 +246,8 @@ function shouldSkip(subject, body, senderEmail) {
     /we (can help|specialise|offer)/i,
     /our (agency|company|team) (can|offers|provides|specialises)/i,
     /impact.com/i,
-    /affiliate (platform|network|program notification)/i,
     /commission (payment|notification)/i,
-    /your (invoice|statement|account)/i,
     /supplier/i,
-    /wholesale (inquiry|enquiry|order)/i,
     /bulk order/i,
     /trade (inquiry|enquiry|account)/i
   ];
@@ -268,7 +262,6 @@ function shouldSkip(subject, body, senderEmail) {
     return { skip: true, reason: 'non-customer' };
   }
 
-  // Skip known no-reply sender domains
   if (senderEmail) {
     var skipDomains = ['noreply', 'no-reply', 'donotreply', 'do-not-reply', 'notifications', 'mailer-daemon'];
     var emailLower = senderEmail.toLowerCase();
@@ -317,10 +310,8 @@ app.post('/gorgias-webhook', async (req, res) => {
     return res.status(400).json({ error: 'Missing ticket_id' });
   }
 
-  // Respond to Gorgias immediately so it does not time out
   res.json({ success: true, ticket_id: ticket_id });
 
-  // Process Evie reply in background
   processTicket(ticket_id).catch(function(err) {
     console.error('Background processing error for ticket ' + ticket_id + ':', err);
   });
@@ -332,7 +323,6 @@ async function processTicket(ticket_id) {
       process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
     ).toString('base64');
 
-    // Fetch ticket
     const ticketResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -343,7 +333,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Fetch messages
     const messagesResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -351,7 +340,6 @@ async function processTicket(ticket_id) {
     const messagesData = await messagesResponse.json();
     const allMessages = messagesData.data || [];
 
-    // Find customer message
     const customerMsg = allMessages.find(function(m) {
       return m.from_agent === false || m.from_agent === null || m.from_agent === undefined;
     });
@@ -372,12 +360,9 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Check if should skip
     var skipCheck = shouldSkip(ticketSubject, customerMessage, customerEmail);
     if (skipCheck.skip) {
       console.log('Skipping ticket ' + ticket_id + ' — reason: ' + skipCheck.reason);
-
-      // Tag non-customer emails for Christine to review
       if (skipCheck.reason === 'non-customer') {
         await fetch(
           'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
@@ -392,16 +377,15 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Determine if escalation needed
     const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
     const followUpTime = isWeekend ? '48 hours' : '24 hours';
 
     const needsEscalation =
       /final.sale|faulty|damaged|defect|broken|wrong.item|policy.exception/i.test(customerMessage) ||
-      /track|where.*order|order.*status|no tracking|haven.t received|not received/i.test(customerMessage) ||
-      /lbl|pro support|brief/i.test(customerMessage);
+      /track|where.*order|order.*status|no tracking|haven.t received|not received|pre.order|preorder/i.test(customerMessage) ||
+      /lbl|pro support|brief/i.test(customerMessage) ||
+      /affiliate|wholesale|partner|collaborat/i.test(customerMessage);
 
-    // Tag ticket if escalation needed
     if (needsEscalation) {
       await fetch(
         'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
@@ -414,7 +398,6 @@ async function processTicket(ticket_id) {
       console.log('Tagged ticket ' + ticket_id + ' as Escalation');
     }
 
-    // Fetch macros
     const macrosResponse = await fetch(
       'https://everformwear.gorgias.com/api/macros?limit=50',
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -422,7 +405,6 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
-    // Build macro context
     var macroContext = '';
     if (macros.length > 0) {
       macroContext = 'AVAILABLE MACROS (use the most relevant one as your template, personalise to this customer, replace {{customer.first_name}} with ' + customerFirstName + '):\n\n';
@@ -434,13 +416,11 @@ async function processTicket(ticket_id) {
       });
     }
 
-    // Build escalation note
     var escalationNote = '';
     if (needsEscalation) {
-      escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that a member of our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — Christine will reach out directly.';
+      escalationNote = '\n\nNOTE: This ticket has been flagged for escalation. Tell the customer warmly that Christine from our team will personally follow up within ' + followUpTime + '. Do NOT tell them to email — Christine will reach out directly.';
     }
 
-    // Ask Claude to draft reply
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -469,7 +449,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Post reply to Gorgias
     const draftResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
       {
