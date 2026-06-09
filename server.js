@@ -15,8 +15,7 @@ MACRO USAGE — CRITICAL:
 When a macro is provided to you, you MUST use it EXACTLY as written. Do not paraphrase, summarise, rewrite or change the content in any way. The ONLY changes you may make are:
 - Replace {{customer.first_name}} with the actual customer name
 - Replace any other {{variable}} placeholders with appropriate values
-- Add a personalised greeting at the start if not already in the macro
-Everything else must remain exactly as written in the macro. Do not add, remove or change any other content.
+Everything else must remain exactly as written in the macro.
 
 If no matching macro is available, use your training knowledge to respond.
 
@@ -35,10 +34,10 @@ The following situations must ALWAYS be escalated to Christine. Respond warmly a
 - Weekends: "Our customer service manager Christine will personally follow up with you within 48 hours."
 
 ALWAYS ESCALATE TO CHRISTINE:
-1. Refund requests where customer insists after Evie's first response
+1. Refund requests
 2. Faulty or damaged items
 3. Sizing enquiries where customer is still unhappy after Evie's first response
-4. Pre-order queries about briefs — use Briefs on Pre-Order macro then escalate
+4. Pre-order queries about briefs
 5. Policy exception requests
 6. Final Sale disputes
 7. Affiliate or wholesale enquiries
@@ -84,24 +83,22 @@ SHOPIFY ORDER LOOKUP:
 
 INVOICE AND RECEIPT REQUESTS:
 - When a customer asks for their invoice or receipt, look up their order in Shopify using their order number and email
-- Retrieve the invoice URL from the order metafields (sufio.invoice_url or invoice_url)
+- Retrieve the invoice URL from the order metafields
 - Send them a direct clickable link: <a href="[invoice_url]" target="_blank">Click here to view and download your invoice</a>
 - Let them know: "Your invoice includes your ARTG number which you will need for any health insurance rebate claims."
-- ARTG numbers by product for reference:
-  * Pregnancy support garments: ARTG 370870
-  * All other products (postpartum, briefs, LBL): ARTG 370871
+- ARTG numbers: Pregnancy support garments ARTG 370870; all other products (postpartum, briefs, LBL) ARTG 370871
 - If the invoice URL cannot be found, ask for their order number and email and escalate to Christine
 
-RETURNS AND EXCHANGES — CORRECT FLOW:
+RETURNS AND EXCHANGES:
 
 EXCHANGES — EVIE HANDLES FULLY:
 - Check eligibility: unworn, unwashed, tags attached, original packaging, within 30 days
 - If eligible direct to: <a href="https://portal.refundid.com/stores/everform-therapywear" target="_blank">Start your exchange here</a>
 - Postpartum Briefs and LBL: exchange or store credit only, must be unopened
 
-REFUNDS — TWO STEP PROCESS:
-- Step 1: Use the Refund Request macro EXACTLY as written
-- Step 2: If customer responds saying they still want a refund — escalate to Christine
+REFUNDS AND RETURNS — USE MACRO, ESCALATE TO CHRISTINE:
+- Use the Refund Request macro EXACTLY as written
+- These must be approved by Christine — the ticket is tagged for her approval
 - Never promise or process refunds yourself
 
 FAULTY ITEMS:
@@ -148,9 +145,6 @@ SHIPPING:
 SIZING ENQUIRIES — USE MACRO EXACTLY:
 - Always use the Size Enquiry Info macro EXACTLY as written
 - Never go straight to booking a fitting — Verifyt 3D scan is always the PRIMARY first option
-- Never skip the Verifyt option
-- If no macro available use this response:
-"Thanks so much for reaching out — great question and we're happy to help you find the perfect fit! The most accurate way to find your size is our free 3D Verifyt body scan — it takes about 2 minutes on your phone. <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">Click here to start your scan</a>. Prefer to self-measure? Visit our <a href="https://everformwear.com.au/pages/sizing" target="_blank">sizing guide</a> or <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">book a fitting consultation</a>."
 
 PROMOTIONAL CODES:
 - Escalate to Christine
@@ -158,11 +152,7 @@ PROMOTIONAL CODES:
 
 HEALTH INSURANCE REBATES:
 - All Everform products registered on TGA — eligible for health insurance rebates in Australia
-- ARTG numbers:
-  * Pregnancy support garments: ARTG 370870
-  * Postpartum recovery garments: ARTG 370871
-  * Pro Support Brief: ARTG 370871
-  * LBL Recovery Brief: ARTG 370871
+- ARTG numbers: Pregnancy support garments ARTG 370870; Postpartum recovery garments ARTG 370871; Pro Support Brief ARTG 370871; LBL Recovery Brief ARTG 370871
 - Medical prescription if needed: <a href="https://drive.google.com/file/d/1yzC8Fruk1AfeK8tzsIyjNXUtCNY_C8Ia/view?usp=drive_link" target="_blank">Download the prescription pad</a>
 - Direct customers to request their invoice for proof of purchase — it contains the ARTG number
 
@@ -194,10 +184,6 @@ RULES:
 - Tag every ticket Evie responds to with evie-replied
 
 GORGIAS EMAIL REPLIES:
-Use macros as EXACT templates — do not change the content:
-- Sizing queries → Size Enquiry Info macro (use EXACTLY)
-- Refund requests → Refund Request macro (use EXACTLY)
-- Briefs pre-order → Briefs on Pre-Order macro (use EXACTLY)
 Replace ONLY {{customer.first_name}} and other variables. Sign off with:
 "Warm regards,
 Evie
@@ -206,67 +192,24 @@ Everform AI Customer Assistant"`;
 // Auto-reply and non-customer email detection
 function shouldSkip(subject, body, senderEmail) {
   var autoReplyPatterns = [
-    /out of office/i,
-    /out-of-office/i,
-    /auto.?reply/i,
-    /automatic.?reply/i,
-    /automated.?reply/i,
-    /away from (the )?office/i,
-    /on leave/i,
-    /on vacation/i,
-    /annual leave/i,
-    /maternity leave/i,
-    /currently away/i,
-    /currently out/i,
-    /i am away/i,
-    /i will be (out|away|unavailable)/i,
-    /do not reply/i,
-    /do-not-reply/i,
-    /noreply/i,
-    /no-reply/i,
-    /this is an automated/i,
-    /this email was sent automatically/i,
-    /please do not respond/i,
-    /delivery (status )?notification/i,
-    /mail delivery failed/i,
-    /returned mail/i,
-    /unsubscribe/i,
-    /review notification/i,
-    /left a review/i,
-    /new review/i,
-    /star review/i,
-    /submitted a review/i,
-    /judge\.me/i,
-    /yotpo/i,
-    /klaviyo/i,
-    /mailchimp/i,
-    /notification/i
+    /out of office/i, /out-of-office/i, /auto.?reply/i, /automatic.?reply/i, /automated.?reply/i,
+    /away from (the )?office/i, /on leave/i, /on vacation/i, /annual leave/i, /maternity leave/i,
+    /currently away/i, /currently out/i, /i am away/i, /i will be (out|away|unavailable)/i,
+    /do not reply/i, /do-not-reply/i, /noreply/i, /no-reply/i, /this is an automated/i,
+    /this email was sent automatically/i, /please do not respond/i, /delivery (status )?notification/i,
+    /mail delivery failed/i, /returned mail/i, /unsubscribe/i, /review notification/i,
+    /left a review/i, /new review/i, /star review/i, /submitted a review/i, /judge\.me/i,
+    /yotpo/i, /klaviyo/i, /mailchimp/i, /notification/i
   ];
 
   var nonCustomerPatterns = [
-    /partnership/i,
-    /collaboration/i,
-    /influencer/i,
-    /ambassador/i,
-    /press release/i,
-    /media enquiry/i,
-    /marketing proposal/i,
-    /advertising opportunity/i,
-    /sponsored/i,
-    /brand deal/i,
-    /pr opportunity/i,
-    /campaign proposal/i,
-    /link building/i,
-    /seo (services|proposal|offer)/i,
-    /guest post/i,
-    /content marketing/i,
-    /digital marketing (agency|services)/i,
-    /we (can help|specialise|offer)/i,
+    /partnership/i, /collaboration/i, /influencer/i, /ambassador/i, /press release/i,
+    /media enquiry/i, /marketing proposal/i, /advertising opportunity/i, /sponsored/i,
+    /brand deal/i, /pr opportunity/i, /campaign proposal/i, /link building/i,
+    /seo (services|proposal|offer)/i, /guest post/i, /content marketing/i,
+    /digital marketing (agency|services)/i, /we (can help|specialise|offer)/i,
     /our (agency|company|team) (can|offers|provides|specialises)/i,
-    /commission (payment|notification)/i,
-    /supplier/i,
-    /bulk order/i,
-    /trade (inquiry|enquiry|account)/i
+    /commission (payment|notification)/i, /supplier/i, /bulk order/i, /trade (inquiry|enquiry|account)/i
   ];
 
   var combined = (subject || '') + ' ' + (body || '') + ' ' + (senderEmail || '');
@@ -274,11 +217,9 @@ function shouldSkip(subject, body, senderEmail) {
   if (autoReplyPatterns.some(function(p) { return p.test(combined); })) {
     return { skip: true, reason: 'auto-reply' };
   }
-
   if (nonCustomerPatterns.some(function(p) { return p.test(combined); })) {
     return { skip: true, reason: 'non-customer' };
   }
-
   if (senderEmail) {
     var skipDomains = ['noreply', 'no-reply', 'donotreply', 'do-not-reply', 'notifications', 'mailer-daemon', 'judge.me', 'klaviyo', 'mailchimp'];
     var emailLower = senderEmail.toLowerCase();
@@ -286,7 +227,6 @@ function shouldSkip(subject, body, senderEmail) {
       return { skip: true, reason: 'no-reply sender' };
     }
   }
-
   return { skip: false };
 }
 
@@ -297,10 +237,7 @@ async function lookupOrder(orderNumber, customerEmail) {
     var url = 'https://lennyroseactive.myshopify.com/admin/api/2024-01/orders.json?name=' + encodeURIComponent(cleanOrder) + '&status=any';
     var response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'X-Shopify-Access-Token': process.env.SHOPIFY_API_TOKEN,
-        'Content-Type': 'application/json'
-      }
+      headers: { 'X-Shopify-Access-Token': process.env.SHOPIFY_API_TOKEN, 'Content-Type': 'application/json' }
     });
     var data = await response.json();
     var orders = data.orders || [];
@@ -311,24 +248,16 @@ async function lookupOrder(orderNumber, customerEmail) {
       });
       if (filtered.length > 0) orders = filtered;
     }
-
     if (orders.length === 0) return null;
 
     var order = orders[0];
     var fulfillment = order.fulfillments && order.fulfillments[0];
 
-    // Get invoice URL from order metafields
     var invoiceUrl = null;
     try {
       var metafieldsResponse = await fetch(
         'https://lennyroseactive.myshopify.com/admin/api/2024-01/orders/' + order.id + '/metafields.json',
-        {
-          method: 'GET',
-          headers: {
-            'X-Shopify-Access-Token': process.env.SHOPIFY_API_TOKEN,
-            'Content-Type': 'application/json'
-          }
-        }
+        { method: 'GET', headers: { 'X-Shopify-Access-Token': process.env.SHOPIFY_API_TOKEN, 'Content-Type': 'application/json' } }
       );
       var metafieldsData = await metafieldsResponse.json();
       var metafields = metafieldsData.metafields || [];
@@ -521,18 +450,18 @@ async function processTicket(ticket_id) {
     const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
     const followUpTime = isWeekend ? '48 hours' : '24 hours';
 
+    const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
+    const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
+    const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
+
     const needsEscalation =
+      isRefundQuery ||
       /faulty|damaged|defect|broken|wrong.item/i.test(customerMessage) ||
       /final.sale|policy.exception/i.test(customerMessage) ||
-      /brief|lbl|pro support/i.test(customerMessage) ||
+      isBriefsQuery ||
       /pre.order|preorder/i.test(customerMessage) ||
       /affiliate|wholesale|partner|collaborat/i.test(customerMessage) ||
       /promo.?code|discount.code|voucher/i.test(customerMessage);
-
-    // Detect query types
-    const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
-    const isRefundQuery = /refund|money back|reimburse/i.test(customerMessage);
-    const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
 
     // Tag ticket
     var tags = [{ name: 'evie-replied' }];
@@ -555,58 +484,70 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
-    // Find specific macros
     const briefsMacro = macros.find(function(m) { return m.name && /briefs on pre.order/i.test(m.name); });
-    const refundMacro = macros.find(function(m) { return m.name && /refund.request/i.test(m.name); });
+    const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name); });
     const sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
 
-    // Build macro context — EXACT usage
-    var macroContext = '';
-    if (isBriefsQuery && briefsMacro) {
-      macroContext = 'CRITICAL INSTRUCTION: Use the following macro as your EXACT response. Replace ONLY {{customer.first_name}} with "' + customerFirstName + '". Do not change any other word, sentence or content:\n\n--- MACRO: ' + briefsMacro.name + ' ---\n' + (briefsMacro.body_text || briefsMacro.body_html || '') + '\n\n';
-    } else if (isRefundQuery && refundMacro) {
-      macroContext = 'CRITICAL INSTRUCTION: Use the following macro as your EXACT response. Replace ONLY {{customer.first_name}} with "' + customerFirstName + '". Do not change any other word, sentence or content:\n\n--- MACRO: ' + refundMacro.name + ' ---\n' + (refundMacro.body_text || refundMacro.body_html || '') + '\n\n';
-    } else if (isSizingQuery && sizeMacro) {
-      macroContext = 'CRITICAL INSTRUCTION: Use the following macro as your EXACT response. Replace ONLY {{customer.first_name}} with "' + customerFirstName + '". Do not change any other word, sentence or content:\n\n--- MACRO: ' + sizeMacro.name + ' ---\n' + (sizeMacro.body_text || sizeMacro.body_html || '') + '\n\n';
-    } else if (macros.length > 0) {
-      macroContext = 'AVAILABLE MACROS: Check if any of these exactly match the customer query. If one matches, use it as your EXACT response replacing only {{customer.first_name}} with "' + customerFirstName + '":\n\n';
-      macros.forEach(function(macro) {
-        if (macro.body_html || macro.body_text) {
-          macroContext += '--- MACRO: ' + macro.name + ' ---\n';
-          macroContext += (macro.body_text || macro.body_html || '') + '\n\n';
-        }
-      });
-    }
+    // Decide which macro (if any) exactly matches this query
+    var matchedMacro = null;
+    if (isRefundQuery && refundMacro) matchedMacro = refundMacro;
+    else if (isBriefsQuery && briefsMacro) matchedMacro = briefsMacro;
+    else if (isSizingQuery && sizeMacro) matchedMacro = sizeMacro;
 
-    // Build escalation note
-    var escalationNote = '';
-    if (needsEscalation) {
-      escalationNote = '\n\nNOTE: This ticket needs escalation. Tell the customer Christine will personally follow up within ' + followUpTime + '. Do NOT reference hello@everformwear.com — Christine will reach out directly through this ticket.';
-    }
+    var draftReply = '';
 
-    // Ask Claude to draft reply
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: [
-          {
-            role: 'user',
-            content: existingThreadContext + orderContext + macroContext + 'Draft a reply to this customer email. Customer name: ' + customerFirstName + '. Their message: ' + customerMessage + escalationNote
+    if (matchedMacro) {
+      // SEND THE MACRO VERBATIM — built in code, NOT by the AI, so it can never be paraphrased
+      var macroBody = matchedMacro.body_text || matchedMacro.body_html || '';
+      // 1. personalise the customer name
+      macroBody = macroBody.replace(/{{\s*customer\.first_name\s*}}/gi, customerFirstName);
+      // 2. turn markdown links [text](url) into clickable HTML links
+      macroBody = macroBody.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      // 3. make the sign-off clearly from Evie, not Christine
+      macroBody = macroBody.replace(/Everform Client Care/gi, 'Everform AI Customer Assistant');
+      macroBody = macroBody.replace(/(regards,?\s*\n?\s*)Christine/gi, '$1Evie');
+      draftReply = macroBody;
+      console.log('Sent verbatim macro "' + matchedMacro.name + '" for ticket ' + ticket_id);
+    } else {
+      // No exact macro matches — let Evie compose using her training and any order/invoice data
+      var availableMacros = '';
+      if (macros.length > 0) {
+        availableMacros = 'AVAILABLE MACROS (if one exactly matches, reproduce it word for word, only swapping in the name "' + customerFirstName + '"):\n\n';
+        macros.forEach(function(macro) {
+          if (macro.body_html || macro.body_text) {
+            availableMacros += '--- MACRO: ' + macro.name + ' ---\n' + (macro.body_text || macro.body_html || '') + '\n\n';
           }
-        ]
-      })
-    });
+        });
+      }
 
-    const claudeData = await claudeResponse.json();
-    const draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
+      var escalationNote = '';
+      if (needsEscalation) {
+        escalationNote = '\n\nNOTE: This ticket needs escalation. Tell the customer Christine will personally follow up within ' + followUpTime + '. Do NOT reference hello@everformwear.com — Christine will reach out directly through this ticket.';
+      }
+
+      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: [
+            {
+              role: 'user',
+              content: existingThreadContext + orderContext + availableMacros + 'Draft a reply to this customer email. Customer name: ' + customerFirstName + '. Their message: ' + customerMessage + escalationNote
+            }
+          ]
+        })
+      });
+
+      const claudeData = await claudeResponse.json();
+      draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
+    }
 
     if (!draftReply) {
       console.error('No reply generated for ticket ' + ticket_id);
