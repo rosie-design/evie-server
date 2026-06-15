@@ -42,7 +42,8 @@ ALWAYS ESCALATE TO CHRISTINE:
 6. Final Sale disputes
 7. Affiliate or wholesale enquiries
 8. Promotional code issues
-9. Anything Evie cannot fully resolve
+9. SWEAT membership code not received or not working
+10. Anything Evie cannot fully resolve
 
 NEVER say "email our team" or reference hello@everformwear.com — Christine will follow up directly via this ticket. The ONLY email address Evie should ever reference is christine@everformwear.com and only when absolutely necessary.
 
@@ -51,21 +52,51 @@ STORE:
 - Christine (Customer Service Manager): christine@everformwear.com
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
+CURRENT SALE — BUY 2 SAVE 30% (16–20 JUNE 2026) — CRITICAL:
+
+SALE PERIOD:
+- Sale is LIVE Tuesday 16 June to Sunday 20 June 2026, closing 11:59pm Sunday 20 June.
+- From Monday 22 June 2026 the full-price store resumes and the standard returns policy is reinstated.
+
+THE OFFER — BUY 2, SAVE 30%:
+- 30% off applies automatically at checkout when 2 or more qualifying items are in the cart. No code is needed.
+- Single-item orders do NOT receive a discount.
+- Bundles are EXCLUDED — they are already discounted and do not qualify.
+- If a customer says the discount hasn't applied, ask them to confirm they have 2 or more non-bundle items in their cart before checking out.
+
+BONUS OFFER 1 — FREE 3-MONTH SWEAT MEMBERSHIP (Fri 19 June to midnight Sun 20 June only):
+- Every purchase made during this window receives a complimentary 3-month SWEAT membership via a post-purchase email flow.
+- The unique code is valid until 20 November 2026 — customers do not need to activate it immediately.
+- If a customer hasn't received their code or reports it isn't working, escalate to Christine.
+
+BONUS OFFER 2 — FREE BRILLO BEAUTY PRODUCT, up to $45 RRP (Sun 20 June only, first 40 orders):
+- The first 40 orders placed on Sunday 20 June receive a complimentary Brillo Beauty product.
+- Strictly the first 40 orders only. Do NOT promise this to any customer — advise it is subject to availability.
+
+SALE SHIPPING:
+- Free shipping on orders $200 and over.
+- Orders under $200 are subject to standard shipping rates.
+
+SALE RETURNS AND EXCHANGES — STORE CREDIT ONLY:
+- All orders placed during the promotional window (9am Tue 16 June to 11:59pm Sun 20 June 2026) are eligible for STORE CREDIT ONLY — no returns or exchanges — regardless of reason.
+- Store credit has a 3 year expiry and can be used on any future Everform purchase.
+- Standard returns and exchange conditions resume from Monday 22 June 2026.
+- This sale returns rule OVERRIDES the standard returns policy for any order placed within the sale window.
+
 PRE-ORDER UPDATE — CRITICAL:
 
-BRIEFS (LBL Recovery Brief and Pro Support Brief):
-- Currently experiencing freight delays — do NOT give a specific dispatch date
-- Use the Briefs on Pre-Order macro EXACTLY as written
-- Always escalate to Christine after sending response
+BRIEFS (LBL Recovery Brief and Pro Support Brief) — UNDERWEAR PRE-ORDER:
+- Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any specific date.
+- Direct the customer to Christine for the latest update: "Dispatch dates for our underwear pre-orders are still to be confirmed. For the latest update on your order, please reach out to christine@everformwear.com and she'll be able to help."
+- Always escalate to Christine.
 
 SHORTS AND OTHER PRODUCTS:
-- Shipment has landed in Australia
-- Dispatching 6th May 2026
-- Respond: "Great news — your order has landed in Australia and is due to be dispatched on 6th May 2026. You will receive a tracking email as soon as it is on its way!"
+- For order status, use the customer's order number and email to look up their real status and tracking in Shopify.
+- Do NOT quote a fixed dispatch date. If the order has shipped, share the tracking link; if it has not yet shipped or the status is unclear, let them know it is being processed and they can contact christine@everformwear.com for a specific update.
 
 MIXED ORDERS (briefs + other items):
-- Other items dispatch 6th May 2026
-- Briefs subject to further delays — escalate to Christine
+- Non-brief items follow their real Shopify status (look it up).
+- Briefs are subject to delay with dispatch dates to be confirmed — direct to christine@everformwear.com.
 
 ORDER TRACKING (non pre-order):
 - Processing time is 3-5 business days (excluding weekends)
@@ -89,7 +120,7 @@ INVOICE AND RECEIPT REQUESTS:
 - ARTG numbers: Pregnancy support garments ARTG 370870; all other products (postpartum, briefs, LBL) ARTG 370871
 - If the invoice URL cannot be found, ask for their order number and email and escalate to Christine
 
-RETURNS AND EXCHANGES:
+RETURNS AND EXCHANGES (standard — applies outside the sale window):
 
 EXCHANGES — EVIE HANDLES FULLY:
 - Check eligibility: unworn, unwashed, tags attached, original packaging, within 30 days
@@ -131,11 +162,7 @@ BUNDLE PURCHASES:
 - Full refunds only when ALL items returned together
 - Partial returns: refund adjusted minus proportional bundle discount
 
-MOTHER'S DAY GIFTING (purchases between 21 April and 9 May 2026):
-- Extended 45-day returns and exchanges window
-- Standard return conditions still apply
-
-SHIPPING:
+SHIPPING (standard — applies outside the sale window):
 - Standard and Express options available
 - Free standard shipping on Australian orders over $180, $10 flat rate under $180, Express $15 (free Express over $200)
 - International: free over $300 AUD; under $300 calculated by location, shipped with DHL
@@ -176,7 +203,10 @@ RULES:
 - ALWAYS use macros EXACTLY as written — no changes except customer name
 - Keep replies SHORT — 2-3 sentences max unless using a macro
 - Never invent order details or tracking numbers
+- Never quote a dispatch date for underwear pre-orders — dates are TBC, direct to Christine
 - Never go straight to booking a fitting — always offer Verifyt first
+- Never promise the Brillo Beauty bonus — it is subject to availability (first 40 orders Sun 20 June only)
+- During the sale window, returns are STORE CREDIT ONLY regardless of reason
 - Always format links as HTML anchor tags
 - NEVER reference hello@everformwear.com
 - Never tell customers to email — Christine follows up directly
@@ -188,6 +218,16 @@ Replace ONLY {{customer.first_name}} and other variables. Sign off with:
 "Warm regards,
 Evie
 Everform AI Customer Assistant"`;
+
+// Render a Gorgias macro verbatim (only swap name, links, sign-off)
+function renderMacro(macro, firstName) {
+  var body = macro.body_text || macro.body_html || '';
+  body = body.replace(/{{\s*customer\.first_name\s*}}/gi, firstName);
+  body = body.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  body = body.replace(/Everform Client Care/gi, 'Everform AI Customer Assistant');
+  body = body.replace(/(regards,?\s*\n?\s*)Christine/gi, '$1Evie');
+  return body;
+}
 
 // Auto-reply and non-customer email detection
 function shouldSkip(subject, body, senderEmail) {
@@ -420,12 +460,13 @@ async function processTicket(ticket_id) {
     }
 
     // Check for order number and look up if found
+    var orderData = null;
     var orderContext = '';
     var isInvoiceQuery = /invoice|receipt|proof of purchase|artg|health insurance|rebate/i.test(customerMessage);
     var orderMatch = customerMessage.match(/#?(\d{4,6})/);
 
     if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
-      var orderData = await lookupOrder(orderMatch[0], customerEmail);
+      orderData = await lookupOrder(orderMatch[0], customerEmail);
       if (orderData) {
         orderContext = 'SHOPIFY ORDER DATA for ' + orderData.orderNumber + ':\n';
         orderContext += '- Status: ' + orderData.fulfillmentStatus + '\n';
@@ -446,13 +487,23 @@ async function processTicket(ticket_id) {
       orderContext = 'IMPORTANT: Customer is asking about their invoice but has not provided an order number. Ask for their order number and email address so you can retrieve their invoice.\n\n';
     }
 
-    // Determine if escalation needed
+    // Was this order placed during the sale window? (store credit only on returns)
+    var isSaleOrder = false;
+    if (orderData && orderData.createdAt) {
+      var created = new Date(orderData.createdAt);
+      var saleStart = new Date('2026-06-16T00:00:00+10:00');
+      var saleEnd = new Date('2026-06-21T00:00:00+10:00');
+      if (created >= saleStart && created < saleEnd) isSaleOrder = true;
+    }
+
+    // Query type detection
     const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
     const followUpTime = isWeekend ? '48 hours' : '24 hours';
 
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
     const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
     const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
+    const isBriefPreorder = isBriefsQuery && /pre.?order|preorder|dispatch|ship|track|when|where|delay|arriv|status|received|haven|hasn/i.test(customerMessage);
 
     const needsEscalation =
       isRefundQuery ||
@@ -461,7 +512,8 @@ async function processTicket(ticket_id) {
       isBriefsQuery ||
       /pre.order|preorder/i.test(customerMessage) ||
       /affiliate|wholesale|partner|collaborat/i.test(customerMessage) ||
-      /promo.?code|discount.code|voucher/i.test(customerMessage);
+      /promo.?code|discount.code|voucher/i.test(customerMessage) ||
+      /sweat/i.test(customerMessage);
 
     // Tag ticket
     var tags = [{ name: 'evie-replied' }];
@@ -484,32 +536,34 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
-    const briefsMacro = macros.find(function(m) { return m.name && /briefs on pre.order/i.test(m.name); });
     const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name); });
     const sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
 
-    // Decide which macro (if any) exactly matches this query
-    var matchedMacro = null;
-    if (isRefundQuery && refundMacro) matchedMacro = refundMacro;
-    else if (isBriefsQuery && briefsMacro) matchedMacro = briefsMacro;
-    else if (isSizingQuery && sizeMacro) matchedMacro = sizeMacro;
-
     var draftReply = '';
 
-    if (matchedMacro) {
-      // SEND THE MACRO VERBATIM — built in code, NOT by the AI, so it can never be paraphrased
-      var macroBody = matchedMacro.body_text || matchedMacro.body_html || '';
-      // 1. personalise the customer name
-      macroBody = macroBody.replace(/{{\s*customer\.first_name\s*}}/gi, customerFirstName);
-      // 2. turn markdown links [text](url) into clickable HTML links
-      macroBody = macroBody.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-      // 3. make the sign-off clearly from Evie, not Christine
-      macroBody = macroBody.replace(/Everform Client Care/gi, 'Everform AI Customer Assistant');
-      macroBody = macroBody.replace(/(regards,?\s*\n?\s*)Christine/gi, '$1Evie');
-      draftReply = macroBody;
-      console.log('Sent verbatim macro "' + matchedMacro.name + '" for ticket ' + ticket_id);
+    if (isRefundQuery && isSaleOrder) {
+      // Sale order — store credit only, no returns/exchanges
+      draftReply = 'Hi ' + customerFirstName + ',\n\n'
+        + 'Thanks so much for reaching out! As your order was placed during our Buy 2 Save 30% sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
+        + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. I have passed your request to our customer service manager Christine, who will personally follow up within ' + followUpTime + ' to arrange this for you.\n\n'
+        + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
+      console.log('Sale-order store-credit override for ticket ' + ticket_id);
+    } else if (isRefundQuery && refundMacro) {
+      // Standard refund/return — send macro verbatim, Christine approves (ticket tagged Escalation)
+      draftReply = renderMacro(refundMacro, customerFirstName);
+      console.log('Sent verbatim refund macro for ticket ' + ticket_id);
+    } else if (isBriefPreorder) {
+      // Underwear pre-order — dispatch dates TBC, direct to Christine
+      draftReply = 'Hi ' + customerFirstName + ',\n\n'
+        + 'Thanks so much for your patience! Dispatch dates for our underwear pre-orders (the LBL Recovery Brief and Pro Support Brief) are still to be confirmed. For the latest update on your order, please reach out to our customer service manager Christine at christine@everformwear.com and she will be able to help.\n\n'
+        + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
+      console.log('Brief pre-order open-ended reply for ticket ' + ticket_id);
+    } else if (isSizingQuery && sizeMacro) {
+      // Sizing — send Size Enquiry Info macro verbatim
+      draftReply = renderMacro(sizeMacro, customerFirstName);
+      console.log('Sent verbatim sizing macro for ticket ' + ticket_id);
     } else {
-      // No exact macro matches — let Evie compose using her training and any order/invoice data
+      // No exact match — let Evie compose using her training and any order/invoice data
       var availableMacros = '';
       if (macros.length > 0) {
         availableMacros = 'AVAILABLE MACROS (if one exactly matches, reproduce it word for word, only swapping in the name "' + customerFirstName + '"):\n\n';
