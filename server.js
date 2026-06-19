@@ -23,33 +23,37 @@ RESPONSE STYLE:
 - Keep responses SHORT — 2-3 sentences max unless using a macro which must be used in full
 - Be warm but efficient
 - Never apologise unnecessarily — be positive and solution-focused
-- NEVER direct customers to hello@everformwear.com — always direct to Christine at christine@everformwear.com or escalate directly
+
+CONTACT AND ESCALATION — CRITICAL:
+- NEVER give the customer ANY email address — not hello@everformwear.com, and not Christine's email.
+- All escalations stay inside THIS conversation. Tell the customer that our customer service manager Christine will personally follow up with them HERE (in this same thread). The customer does not need to email anyone — Christine handles escalated tickets directly within our help desk and will reply right here.
+- Never tell a customer to "email us", "reach out by email", or "contact our team at" any address.
 
 IMPORTANT - LINKS IN RESPONSES:
 When providing links, always format them as HTML anchor tags so they are clickable. For example: <a href="https://example.com" target="_blank">click here</a>. Always use descriptive link text, never show raw URLs.
 
 ESCALATION RULES — CRITICAL:
-The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up:
-- Weekdays: "Our customer service manager Christine will personally follow up with you within 24 hours."
-- Weekends: "Our customer service manager Christine will personally follow up with you within 48 hours."
+The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up with them here:
+- Weekdays: "Our customer service manager Christine will personally follow up with you here within 24 hours."
+- Weekends: "Our customer service manager Christine will personally follow up with you here within 48 hours."
 
 ALWAYS ESCALATE TO CHRISTINE:
 1. Refund requests
-2. Faulty or damaged items
-3. Sizing enquiries where customer is still unhappy after Evie's first response
-4. Pre-order queries about briefs
-5. Policy exception requests
-6. Final Sale disputes
-7. Affiliate or wholesale enquiries
-8. Promotional code issues
-9. SWEAT membership code not received or not working
-10. Anything Evie cannot fully resolve
-
-NEVER say "email our team" or reference hello@everformwear.com — Christine will follow up directly via this ticket. The ONLY email address Evie should ever reference is christine@everformwear.com and only when absolutely necessary.
+2. Cancellation requests (including cancelling a pre-order)
+3. Faulty or damaged items
+4. Sizing enquiries where customer is still unhappy after Evie's first response
+5. Briefs (underwear) pre-order queries
+6. Mixed orders — whether items ship separately or together (policy not yet confirmed)
+7. Policy exception requests
+8. Final Sale disputes
+9. Affiliate or wholesale enquiries
+10. Promotional code issues
+11. SWEAT membership code not received or not working
+12. Anything Evie cannot fully resolve
 
 STORE:
 - Website: everformwear.com.au
-- Christine (Customer Service Manager): christine@everformwear.com
+- Customer Service Manager: Christine (handles all escalations directly inside the help desk — her email is internal only and must never be shared with customers)
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
 CURRENT SALE — BUY 2 SAVE 30% (16–20 JUNE 2026) — CRITICAL:
@@ -83,20 +87,28 @@ SALE RETURNS AND EXCHANGES — STORE CREDIT ONLY:
 - Standard returns and exchange conditions resume from Monday 22 June 2026.
 - This sale returns rule OVERRIDES the standard returns policy for any order placed within the sale window.
 
-PRE-ORDER UPDATE — CRITICAL:
+PRE-ORDER ITEMS — CRITICAL:
 
-BRIEFS (LBL Recovery Brief and Pro Support Brief) — UNDERWEAR PRE-ORDER:
-- Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any specific date.
-- Direct the customer to Christine for the latest update: "Dispatch dates for our underwear pre-orders are still to be confirmed. For the latest update on your order, please reach out to christine@everformwear.com and she'll be able to help."
+A) SALE SOLD-OUT SIZES (leggings and shorts that sold out during the sale):
+- During the sale, sizes that sold out were switched from "Sold out" to "Pre-order". Any size showing "Pre-order" is sold out in current stock and will be fulfilled from incoming stock.
+- These pre-order items are scheduled to ship 7 JULY 2026. Always give 7 July 2026 as the ship date. Do NOT mention any other date.
+- You can tell an order contains one of these because the order data will be flagged as containing a pre-order item. When it is, reassure the customer: the order is confirmed and paid; the pre-order item ships 7 July 2026; any in-stock items in the same order ship now.
+- LEGGINGS — POCKETS FREE UPGRADE: customers who pre-ordered a sold-out size of the original (no pockets) leggings will receive the new "With Pockets" version at NO extra cost. Always frame this as a free upgrade, never as a substitution problem.
+- SHORTS: pre-order shorts ship from their own incoming stock. There is no pockets version, so the upgrade message does NOT apply to shorts.
+- QUICK ANSWERS:
+  * "Is my order confirmed?" → Yes, your order is fully placed and paid. One or more items are on pre-order because that size sold out; it ships 7 July 2026.
+  * "When will it arrive?" → Pre-order items are scheduled to ship 7 July 2026; delivery follows normal transit times after that.
+  * "I ordered the leggings without pockets — what will I get?" → You'll receive the upgraded With-Pockets version at no extra charge.
+  * "Why does it say pre-order?" → That size sold out, so rather than remove it we let you reserve it from our incoming stock.
+- NOT YET DEFINED — ESCALATE TO CHRISTINE, DO NOT GUESS:
+  * Whether a MIXED order (pre-order item + in-stock item) ships in two parcels or holds and ships together.
+  * Cancelling or refunding a pre-order before it ships.
+  If asked about either, escalate to Christine (she follows up here) and do not state a policy.
+
+B) BRIEFS (LBL Recovery Brief and Pro Support Brief) — UNDERWEAR PRE-ORDER:
+- This is SEPARATE from the sale sold-out pre-orders. Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any date (do not say 7 July).
+- Let the customer know Christine will personally follow up with them here with the latest update. Do NOT give out any email address.
 - Always escalate to Christine.
-
-SHORTS AND OTHER PRODUCTS:
-- For order status, use the customer's order number and email to look up their real status and tracking in Shopify.
-- Do NOT quote a fixed dispatch date. If the order has shipped, share the tracking link; if it has not yet shipped or the status is unclear, let them know it is being processed and they can contact christine@everformwear.com for a specific update.
-
-MIXED ORDERS (briefs + other items):
-- Non-brief items follow their real Shopify status (look it up).
-- Briefs are subject to delay with dispatch dates to be confirmed — direct to christine@everformwear.com.
 
 ORDER TRACKING (non pre-order):
 - Processing time is 3-5 business days (excluding weekends)
@@ -109,8 +121,8 @@ SHOPIFY ORDER LOOKUP:
 - When a customer asks about their order status or tracking, ask for their order number and email address
 - Use these to look up their real order details from Shopify
 - Provide their actual fulfillment status and tracking link if available
-- If order is not found, ask them to double check their order number and email
-- If still not found escalate to Christine
+- If the order is flagged as containing a pre-order item, give the 7 July 2026 ship date
+- If order is not found, ask them to double check their order number and email; if still not found escalate to Christine
 
 INVOICE AND RECEIPT REQUESTS:
 - When a customer asks for their invoice or receipt, look up their order in Shopify using their order number and email
@@ -175,7 +187,7 @@ SIZING ENQUIRIES — USE MACRO EXACTLY:
 
 PROMOTIONAL CODES:
 - Escalate to Christine
-- Respond: "Our customer service manager Christine will personally look into this for you and follow up within 24 hours (48 hours on weekends)."
+- Respond: "Our customer service manager Christine will personally look into this for you and follow up here within 24 hours (48 hours on weekends)."
 
 HEALTH INSURANCE REBATES:
 - All Everform products registered on TGA — eligible for health insurance rebates in Australia
@@ -195,21 +207,22 @@ Pelvic Floor Support Wear:
 - Pro Support Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild bladder or uterine prolapse, pelvic congestion syndrome
 
 AFFILIATES AND WHOLESALE:
-- Escalate to Christine immediately
-- Never direct to hello@everformwear.com
+- Escalate to Christine immediately (she follows up here)
+- Never give out any email address
 
 RULES:
 - ALWAYS introduce yourself as AI in first response
 - ALWAYS use macros EXACTLY as written — no changes except customer name
 - Keep replies SHORT — 2-3 sentences max unless using a macro
 - Never invent order details or tracking numbers
-- Never quote a dispatch date for underwear pre-orders — dates are TBC, direct to Christine
+- Sale sold-out pre-orders ship 7 July 2026 (never mention any other date); briefs underwear pre-orders are TBC — Christine follows up here
+- Never state whether a mixed order ships separately or together — escalate to Christine
+- Never confirm a cancellation or pre-order refund yourself — escalate to Christine
 - Never go straight to booking a fitting — always offer Verifyt first
 - Never promise the Brillo Beauty bonus — it is subject to availability (first 40 orders Sun 20 June only)
 - During the sale window, returns are STORE CREDIT ONLY regardless of reason
 - Always format links as HTML anchor tags
-- NEVER reference hello@everformwear.com
-- Never tell customers to email — Christine follows up directly
+- NEVER give the customer ANY email address — escalations stay in this thread and Christine follows up here
 - Always give escalation timeframe: 24hrs weekdays, 48hrs weekends
 - Tag every ticket Evie responds to with evie-replied
 
@@ -218,6 +231,36 @@ Replace ONLY {{customer.first_name}} and other variables. Sign off with:
 "Warm regards,
 Evie
 Everform AI Customer Assistant"`;
+
+// Cache for Christine's Gorgias user id (only positive results cached, so it self-heals once she accepts her invite)
+var christineUserIdCache = null;
+
+async function getChristineUserId(gorgiasAuth) {
+  if (christineUserIdCache) return christineUserIdCache;
+  try {
+    var resp = await fetch('https://everformwear.gorgias.com/api/users?limit=100', {
+      method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth }
+    });
+    var data = await resp.json();
+    var users = data.data || [];
+    var christine = users.find(function(u) {
+      return u.email && u.email.toLowerCase() === 'christine@everformwear.com';
+    });
+    if (christine) {
+      christineUserIdCache = christine.id;
+      return christine.id;
+    }
+  } catch (err) {
+    console.log('Could not look up Christine user:', err);
+  }
+  return null;
+}
+
+// Strip any email address from customer-facing replies — escalations must stay inside Gorgias
+function scrubEmails(text) {
+  text = text.replace(/\b[A-Za-z0-9._%+-]+@everformwear\.com\b/gi, 'Christine (who will reply to you right here)');
+  return text;
+}
 
 // Render a Gorgias macro verbatim (only swap name, links, sign-off)
 function renderMacro(macro, firstName) {
@@ -270,7 +313,7 @@ function shouldSkip(subject, body, senderEmail) {
   return { skip: false };
 }
 
-// Shopify order lookup with invoice URL
+// Shopify order lookup with invoice URL and pre-order detection
 async function lookupOrder(orderNumber, customerEmail) {
   try {
     var cleanOrder = orderNumber.replace('#', '').trim();
@@ -292,6 +335,21 @@ async function lookupOrder(orderNumber, customerEmail) {
 
     var order = orders[0];
     var fulfillment = order.fulfillments && order.fulfillments[0];
+
+    var lineItemTitles = [];
+    var hasPreorder = false;
+    (order.line_items || []).forEach(function(li) {
+      lineItemTitles.push(li.title);
+      var props = li.properties || [];
+      props.forEach(function(p) {
+        if (!p) return;
+        var pname = (p.name || '').toString();
+        var pval = (p.value || '').toString();
+        if (/pre.?order/i.test(pname) || /2026\/07\/07/.test(pval) || /ships from/i.test(pval)) {
+          hasPreorder = true;
+        }
+      });
+    });
 
     var invoiceUrl = null;
     try {
@@ -316,7 +374,8 @@ async function lookupOrder(orderNumber, customerEmail) {
       trackingNumber: fulfillment ? fulfillment.tracking_number : null,
       trackingUrl: fulfillment ? fulfillment.tracking_url : null,
       createdAt: order.created_at,
-      lineItems: order.line_items ? order.line_items.map(function(i) { return i.title; }) : [],
+      lineItems: lineItemTitles,
+      hasPreorder: hasPreorder,
       invoiceUrl: invoiceUrl
     };
   } catch (err) {
@@ -347,7 +406,8 @@ app.post('/chat', async (req, res) => {
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data });
-    const reply = data.content && data.content[0] ? data.content[0].text : '';
+    var reply = data.content && data.content[0] ? data.content[0].text : '';
+    reply = scrubEmails(reply);
     res.json({ reply });
   } catch (err) {
     console.error('Chat error:', err);
@@ -372,7 +432,6 @@ async function processTicket(ticket_id) {
       process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
     ).toString('base64');
 
-    // Fetch ticket
     const ticketResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -383,7 +442,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Fetch messages
     const messagesResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -391,7 +449,6 @@ async function processTicket(ticket_id) {
     const messagesData = await messagesResponse.json();
     const allMessages = messagesData.data || [];
 
-    // Skip if human agent has already replied
     const agentReplied = allMessages.some(function(m) {
       return m.from_agent === true && m.via !== 'api';
     });
@@ -400,7 +457,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Find customer message
     const customerMsg = allMessages.find(function(m) {
       return m.from_agent === false || m.from_agent === null || m.from_agent === undefined;
     });
@@ -421,7 +477,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Skip auto-replies and non-customer emails
     var skipCheck = shouldSkip(ticketSubject, customerMessage, customerEmail);
     if (skipCheck.skip) {
       console.log('Skipping ticket ' + ticket_id + ' — reason: ' + skipCheck.reason);
@@ -438,7 +493,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Check for existing threads under same email
     var existingThreadContext = '';
     if (customerEmail) {
       try {
@@ -459,7 +513,6 @@ async function processTicket(ticket_id) {
       }
     }
 
-    // Check for order number and look up if found
     var orderData = null;
     var orderContext = '';
     var isInvoiceQuery = /invoice|receipt|proof of purchase|artg|health insurance|rebate/i.test(customerMessage);
@@ -475,7 +528,12 @@ async function processTicket(ticket_id) {
         if (orderData.trackingNumber) orderContext += '- Tracking number: ' + orderData.trackingNumber + '\n';
         if (orderData.trackingUrl) orderContext += '- Tracking URL: ' + orderData.trackingUrl + '\n';
         if (orderData.invoiceUrl) orderContext += '- Invoice URL: ' + orderData.invoiceUrl + '\n';
+        if (orderData.hasPreorder) orderContext += '- CONTAINS A PRE-ORDER ITEM (sold-out sale size), ships 7 July 2026\n';
         orderContext += '\n';
+
+        if (orderData.hasPreorder) {
+          orderContext += 'IMPORTANT: This order includes a pre-order item (a size that sold out during the sale). Reassure the customer the order is confirmed and paid; the pre-order item is scheduled to ship 7 July 2026; any in-stock items ship now. If they pre-ordered an original no-pockets legging, tell them they will receive the upgraded With-Pockets version at no extra cost. Do NOT state whether items ship in separate parcels — if asked, escalate to Christine.\n\n';
+        }
 
         if (isInvoiceQuery && orderData.invoiceUrl) {
           orderContext += 'IMPORTANT: Customer is asking about their invoice. Send them this link: ' + orderData.invoiceUrl + ' and remind them it contains their ARTG number for health insurance claims.\n\n';
@@ -487,7 +545,6 @@ async function processTicket(ticket_id) {
       orderContext = 'IMPORTANT: Customer is asking about their invoice but has not provided an order number. Ask for their order number and email address so you can retrieve their invoice.\n\n';
     }
 
-    // Was this order placed during the sale window? (store credit only on returns)
     var isSaleOrder = false;
     if (orderData && orderData.createdAt) {
       var created = new Date(orderData.createdAt);
@@ -496,16 +553,17 @@ async function processTicket(ticket_id) {
       if (created >= saleStart && created < saleEnd) isSaleOrder = true;
     }
 
-    // Query type detection
     const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
     const followUpTime = isWeekend ? '48 hours' : '24 hours';
 
+    const isCancellation = /cancel|cancellation/i.test(customerMessage);
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
     const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
     const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
     const isBriefPreorder = isBriefsQuery && /pre.?order|preorder|dispatch|ship|track|when|where|delay|arriv|status|received|haven|hasn/i.test(customerMessage);
 
     const needsEscalation =
+      isCancellation ||
       isRefundQuery ||
       /faulty|damaged|defect|broken|wrong.item/i.test(customerMessage) ||
       /final.sale|policy.exception/i.test(customerMessage) ||
@@ -513,22 +571,33 @@ async function processTicket(ticket_id) {
       /pre.order|preorder/i.test(customerMessage) ||
       /affiliate|wholesale|partner|collaborat/i.test(customerMessage) ||
       /promo.?code|discount.code|voucher/i.test(customerMessage) ||
-      /sweat/i.test(customerMessage);
+      /sweat/i.test(customerMessage) ||
+      /two parcels|separate parcel|ship separately|shipped separately|ship together/i.test(customerMessage);
 
-    // Tag ticket
+    // Build ticket update: tag, and (if escalation) assign to Christine so it lands in her Gorgias queue in-thread
     var tags = [{ name: 'evie-replied' }];
     if (needsEscalation) tags.push({ name: 'Escalation' });
+
+    var ticketUpdate = { tags: tags };
+    if (needsEscalation) {
+      var christineId = await getChristineUserId(gorgiasAuth);
+      if (christineId) {
+        ticketUpdate.assignee_user = { id: christineId };
+        console.log('Assigned escalation ticket ' + ticket_id + ' to Christine (user ' + christineId + ')');
+      } else {
+        console.log('Christine user not found yet — ticket ' + ticket_id + ' tagged Escalation only');
+      }
+    }
 
     await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
       {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
-        body: JSON.stringify({ tags: tags })
+        body: JSON.stringify(ticketUpdate)
       }
     );
 
-    // Fetch macros
     const macrosResponse = await fetch(
       'https://everformwear.gorgias.com/api/macros?limit=50',
       { method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth } }
@@ -541,29 +610,29 @@ async function processTicket(ticket_id) {
 
     var draftReply = '';
 
-    if (isRefundQuery && isSaleOrder) {
-      // Sale order — store credit only, no returns/exchanges
+    if (isCancellation) {
+      draftReply = 'Hi ' + customerFirstName + ',\n\n'
+        + 'Thanks for reaching out about cancelling your order. I have passed this straight to our customer service manager Christine, who will personally follow up with you here within ' + followUpTime + ' to help.\n\n'
+        + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
+      console.log('Cancellation escalation reply for ticket ' + ticket_id);
+    } else if (isRefundQuery && isSaleOrder) {
       draftReply = 'Hi ' + customerFirstName + ',\n\n'
         + 'Thanks so much for reaching out! As your order was placed during our Buy 2 Save 30% sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
-        + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. I have passed your request to our customer service manager Christine, who will personally follow up within ' + followUpTime + ' to arrange this for you.\n\n'
+        + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. I have passed your request to our customer service manager Christine, who will personally follow up with you here within ' + followUpTime + ' to arrange this.\n\n'
         + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
       console.log('Sale-order store-credit override for ticket ' + ticket_id);
     } else if (isRefundQuery && refundMacro) {
-      // Standard refund/return — send macro verbatim, Christine approves (ticket tagged Escalation)
       draftReply = renderMacro(refundMacro, customerFirstName);
       console.log('Sent verbatim refund macro for ticket ' + ticket_id);
     } else if (isBriefPreorder) {
-      // Underwear pre-order — dispatch dates TBC, direct to Christine
       draftReply = 'Hi ' + customerFirstName + ',\n\n'
-        + 'Thanks so much for your patience! Dispatch dates for our underwear pre-orders (the LBL Recovery Brief and Pro Support Brief) are still to be confirmed. For the latest update on your order, please reach out to our customer service manager Christine at christine@everformwear.com and she will be able to help.\n\n'
+        + 'Thanks so much for your patience! Dispatch dates for our underwear pre-orders (the LBL Recovery Brief and Pro Support Brief) are still to be confirmed. Our customer service manager Christine will personally follow up with you here within ' + followUpTime + ' with the latest update on your order.\n\n'
         + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
       console.log('Brief pre-order open-ended reply for ticket ' + ticket_id);
     } else if (isSizingQuery && sizeMacro) {
-      // Sizing — send Size Enquiry Info macro verbatim
       draftReply = renderMacro(sizeMacro, customerFirstName);
       console.log('Sent verbatim sizing macro for ticket ' + ticket_id);
     } else {
-      // No exact match — let Evie compose using her training and any order/invoice data
       var availableMacros = '';
       if (macros.length > 0) {
         availableMacros = 'AVAILABLE MACROS (if one exactly matches, reproduce it word for word, only swapping in the name "' + customerFirstName + '"):\n\n';
@@ -576,7 +645,7 @@ async function processTicket(ticket_id) {
 
       var escalationNote = '';
       if (needsEscalation) {
-        escalationNote = '\n\nNOTE: This ticket needs escalation. Tell the customer Christine will personally follow up within ' + followUpTime + '. Do NOT reference hello@everformwear.com — Christine will reach out directly through this ticket.';
+        escalationNote = '\n\nNOTE: This ticket needs escalation. Tell the customer Christine will personally follow up with them HERE (in this same conversation) within ' + followUpTime + '. Do NOT give out any email address.';
       }
 
       const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -608,7 +677,9 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Post reply to Gorgias
+    // Safety net: strip any email address before sending so escalations stay inside Gorgias
+    draftReply = scrubEmails(draftReply);
+
     const draftResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id + '/messages',
       {
