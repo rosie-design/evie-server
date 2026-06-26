@@ -84,6 +84,7 @@ SALE SHIPPING:
 SALE RETURNS AND EXCHANGES — STORE CREDIT ONLY:
 - All orders placed during the promotional window (9am Tue 16 June to 11:59pm Sun 20 June 2026) are eligible for STORE CREDIT ONLY — no returns or exchanges — regardless of reason.
 - Store credit has a 3 year expiry and can be used on any future Everform purchase.
+- For sale return or exchange enquiries, the "returns and exchanges on EOY SALE" macro is used: store credit only, customer lodges through the returns portal, store credit issued once the return is received and processed.
 - Standard returns and exchange conditions resume from Monday 22 June 2026.
 - This sale returns rule OVERRIDES the standard returns policy for any order placed within the sale window.
 
@@ -148,6 +149,7 @@ FAULTY ITEMS:
 - Direct to Refundid portal: <a href="https://portal.refundid.com/stores/everform-therapywear" target="_blank">Submit your faulty item here</a>
 - Ask for order number and clear photos of the fault
 - Always escalate to Christine as well
+- A faulty item is always escalated and never treated as a sale "store credit only" case, even if it was bought on sale
 
 RETURN CONDITIONS:
 - In original as-new condition
@@ -215,6 +217,8 @@ RULES:
 - ALWAYS use macros EXACTLY as written — no changes except customer name
 - Keep replies SHORT — 2-3 sentences max unless using a macro
 - Never invent order details or tracking numbers
+- For sale-order returns or exchanges, use the EOY SALE returns macro — store credit only via the returns portal
+- A faulty or damaged item is ALWAYS escalated to Christine and never treated as a sale store-credit-only case
 - Sale sold-out pre-orders ship 7 July 2026 (never mention any other date); briefs underwear pre-orders are TBC — Christine follows up here
 - Never state whether a mixed order ships separately or together — escalate to Christine
 - Never confirm a cancellation or pre-order refund yourself — escalate to Christine
@@ -265,10 +269,20 @@ function scrubEmails(text) {
 // Render a Gorgias macro verbatim (only swap name, links, sign-off)
 function renderMacro(macro, firstName) {
   var body = macro.body_text || macro.body_html || '';
+  // 1. personalise the customer name (variable form AND literal placeholder text)
   body = body.replace(/{{\s*customer\.first_name\s*}}/gi, firstName);
+  body = body.replace(/Customer First Name/gi, firstName);
+  // 2. turn markdown links [text](url) into clickable HTML links
   body = body.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  // 3. linkify any remaining bare URLs (skip ones already inside an href)
+  body = body.replace(/(^|[^"'>=])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank">$2</a>');
+  // 4. make the sign-off clearly from Evie, not Christine / Client Care
   body = body.replace(/Everform Client Care/gi, 'Everform AI Customer Assistant');
   body = body.replace(/(regards,?\s*\n?\s*)Christine/gi, '$1Evie');
+  // 5. if the macro ends on a bare sign-off with no name, add Evie's
+  if (/regards,?\s*$/i.test(body.trim())) {
+    body = body.trim() + '\nEvie\nEverform AI Customer Assistant';
+  }
   return body;
 }
 
@@ -558,14 +572,20 @@ async function processTicket(ticket_id) {
 
     const isCancellation = /cancel|cancellation/i.test(customerMessage);
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
+    const isExchangeQuery = /exchange|swap|different size|different style|wrong size/i.test(customerMessage);
+    const isFaulty = /faulty|damaged|defect|broken|wrong.item/i.test(customerMessage);
     const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
     const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
     const isBriefPreorder = isBriefsQuery && /pre.?order|preorder|dispatch|ship|track|when|where|delay|arriv|status|received|haven|hasn/i.test(customerMessage);
 
+    // Routine sale-window return OR exchange → EOY SALE macro + EOY-Return queue (store credit, batch review).
+    // A faulty/damaged item is NOT routine — it stays in the urgent Escalation queue regardless of sale status.
+    const isSaleReturnOrExchange = (isRefundQuery || isExchangeQuery) && isSaleOrder && !isFaulty;
+
     const needsEscalation =
       isCancellation ||
-      isRefundQuery ||
-      /faulty|damaged|defect|broken|wrong.item/i.test(customerMessage) ||
+      isFaulty ||
+      (isRefundQuery && !isSaleReturnOrExchange) ||
       /final.sale|policy.exception/i.test(customerMessage) ||
       isBriefsQuery ||
       /pre.order|preorder/i.test(customerMessage) ||
@@ -574,8 +594,10 @@ async function processTicket(ticket_id) {
       /sweat/i.test(customerMessage) ||
       /two parcels|separate parcel|ship separately|shipped separately|ship together/i.test(customerMessage);
 
-    // Build ticket update: tag, and (if escalation) assign to Christine so it lands in her Gorgias queue in-thread
+    // Build ticket update: tags, plus (for true escalations only) assignment to Christine.
+    // Routine sale returns/exchanges go to the EOY-Return queue and are NOT assigned to Christine.
     var tags = [{ name: 'evie-replied' }];
+    if (isSaleReturnOrExchange) tags.push({ name: 'EOY-Return' });
     if (needsEscalation) tags.push({ name: 'Escalation' });
 
     var ticketUpdate = { tags: tags };
@@ -605,7 +627,10 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
-    const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name); });
+    // EOY sale returns/exchanges macro
+    const eoyReturnMacro = macros.find(function(m) { return m.name && /eoy|eofy/i.test(m.name); });
+    // Standard refund/return macro — exclude the EOY one so the standard path never grabs it
+    const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name) && !/eoy|eofy/i.test(m.name); });
     const sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
 
     var draftReply = '';
@@ -615,12 +640,18 @@ async function processTicket(ticket_id) {
         + 'Thanks for reaching out about cancelling your order. I have passed this straight to our customer service manager Christine, who will personally follow up with you here within ' + followUpTime + ' to help.\n\n'
         + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
       console.log('Cancellation escalation reply for ticket ' + ticket_id);
-    } else if (isRefundQuery && isSaleOrder) {
-      draftReply = 'Hi ' + customerFirstName + ',\n\n'
-        + 'Thanks so much for reaching out! As your order was placed during our Buy 2 Save 30% sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
-        + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. I have passed your request to our customer service manager Christine, who will personally follow up with you here within ' + followUpTime + ' to arrange this.\n\n'
-        + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
-      console.log('Sale-order store-credit override for ticket ' + ticket_id);
+    } else if (isSaleReturnOrExchange) {
+      // Routine sale order return/exchange — use the EOY SALE macro verbatim; fall back to store-credit text if macro missing
+      if (eoyReturnMacro) {
+        draftReply = renderMacro(eoyReturnMacro, customerFirstName);
+        console.log('Sent verbatim EOY SALE returns macro for ticket ' + ticket_id);
+      } else {
+        draftReply = 'Hi ' + customerFirstName + ',\n\n'
+          + 'Thanks so much for reaching out! As your order was placed during our Buy 2 Save 30% sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
+          + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. You can lodge your return through our returns portal, and once it is received and processed you will receive your store credit.\n\n'
+          + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
+        console.log('EOY macro not found — used store-credit fallback for ticket ' + ticket_id);
+      }
     } else if (isRefundQuery && refundMacro) {
       draftReply = renderMacro(refundMacro, customerFirstName);
       console.log('Sent verbatim refund macro for ticket ' + ticket_id);
