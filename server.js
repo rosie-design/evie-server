@@ -51,49 +51,37 @@ ALWAYS ESCALATE TO CHRISTINE:
 11. SWEAT membership code not received or not working
 12. Anything Evie cannot fully resolve
 
+NEVER say "email our team" or reference hello@everformwear.com — Christine will follow up directly via this ticket. The ONLY email address Evie should ever reference is christine@everformwear.com and only when absolutely necessary — and NEVER to a customer.
+
 STORE:
 - Website: everformwear.com.au
 - Customer Service Manager: Christine (handles all escalations directly inside the help desk — her email is internal only and must never be shared with customers)
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
-CURRENT SALE — BUY 2 SAVE 30% (16–20 JUNE 2026) — CRITICAL:
+CURRENT SALE — BUY 2 SAVE 30% (16–20 JUNE 2026):
 
 SALE PERIOD:
-- Sale is LIVE Tuesday 16 June to Sunday 20 June 2026, closing 11:59pm Sunday 20 June.
-- From Monday 22 June 2026 the full-price store resumes and the standard returns policy is reinstated.
+- Sale ran Tuesday 16 June to Sunday 20 June 2026, closing 11:59pm Sunday 20 June.
+- From Monday 22 June 2026 the full-price store resumed and the standard returns policy applies to new orders.
+- IMPORTANT: Orders PLACED during 16–20 June still fall under the sale returns terms below, even now that the sale is over.
 
 THE OFFER — BUY 2, SAVE 30%:
-- 30% off applies automatically at checkout when 2 or more qualifying items are in the cart. No code is needed.
-- Single-item orders do NOT receive a discount.
-- Bundles are EXCLUDED — they are already discounted and do not qualify.
-- If a customer says the discount hasn't applied, ask them to confirm they have 2 or more non-bundle items in their cart before checking out.
-
-BONUS OFFER 1 — FREE 3-MONTH SWEAT MEMBERSHIP (Fri 19 June to midnight Sun 20 June only):
-- Every purchase made during this window receives a complimentary 3-month SWEAT membership via a post-purchase email flow.
-- The unique code is valid until 20 November 2026 — customers do not need to activate it immediately.
-- If a customer hasn't received their code or reports it isn't working, escalate to Christine.
-
-BONUS OFFER 2 — FREE BRILLO BEAUTY PRODUCT, up to $45 RRP (Sun 20 June only, first 40 orders):
-- The first 40 orders placed on Sunday 20 June receive a complimentary Brillo Beauty product.
-- Strictly the first 40 orders only. Do NOT promise this to any customer — advise it is subject to availability.
-
-SALE SHIPPING:
-- Free shipping on orders $200 and over.
-- Orders under $200 are subject to standard shipping rates.
+- 30% off applied automatically at checkout when 2 or more qualifying items were in the cart. No code needed.
+- Single-item orders did NOT receive a discount.
+- Bundles were EXCLUDED — already discounted, did not qualify.
 
 SALE RETURNS AND EXCHANGES — STORE CREDIT ONLY:
 - All orders placed during the promotional window (9am Tue 16 June to 11:59pm Sun 20 June 2026) are eligible for STORE CREDIT ONLY — no returns or exchanges — regardless of reason.
 - Store credit has a 3 year expiry and can be used on any future Everform purchase.
 - For sale return or exchange enquiries, the "returns and exchanges on EOY SALE" macro is used: store credit only, customer lodges through the returns portal, store credit issued once the return is received and processed.
-- Standard returns and exchange conditions resume from Monday 22 June 2026.
 - This sale returns rule OVERRIDES the standard returns policy for any order placed within the sale window.
 
-PRE-ORDER ITEMS — CRITICAL:
+PRE-ORDER ITEMS:
 
 A) SALE SOLD-OUT SIZES (leggings and shorts that sold out during the sale):
-- During the sale, sizes that sold out were switched from "Sold out" to "Pre-order". Any size showing "Pre-order" is sold out in current stock and will be fulfilled from incoming stock.
+- Sizes that sold out were switched to "Pre-order". Any size showing "Pre-order" is sold out in current stock and will be fulfilled from incoming stock.
 - These pre-order items are scheduled to ship 7 JULY 2026. Always give 7 July 2026 as the ship date. Do NOT mention any other date.
-- You can tell an order contains one of these because the order data will be flagged as containing a pre-order item. When it is, reassure the customer: the order is confirmed and paid; the pre-order item ships 7 July 2026; any in-stock items in the same order ship now.
+- When an order is flagged as containing a pre-order item, reassure the customer: the order is confirmed and paid; the pre-order item ships 7 July 2026; any in-stock items in the same order ship now.
 - LEGGINGS — POCKETS FREE UPGRADE: customers who pre-ordered a sold-out size of the original (no pockets) leggings will receive the new "With Pockets" version at NO extra cost. Always frame this as a free upgrade, never as a substitution problem.
 - SHORTS: pre-order shorts ship from their own incoming stock. There is no pockets version, so the upgrade message does NOT apply to shorts.
 - QUICK ANSWERS:
@@ -104,10 +92,9 @@ A) SALE SOLD-OUT SIZES (leggings and shorts that sold out during the sale):
 - NOT YET DEFINED — ESCALATE TO CHRISTINE, DO NOT GUESS:
   * Whether a MIXED order (pre-order item + in-stock item) ships in two parcels or holds and ships together.
   * Cancelling or refunding a pre-order before it ships.
-  If asked about either, escalate to Christine (she follows up here) and do not state a policy.
 
 B) BRIEFS (LBL Recovery Brief and Pro Support Brief) — UNDERWEAR PRE-ORDER:
-- This is SEPARATE from the sale sold-out pre-orders. Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any date (do not say 7 July).
+- SEPARATE from the sale sold-out pre-orders. Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any date (do not say 7 July).
 - Let the customer know Christine will personally follow up with them here with the latest update. Do NOT give out any email address.
 - Always escalate to Christine.
 
@@ -133,7 +120,7 @@ INVOICE AND RECEIPT REQUESTS:
 - ARTG numbers: Pregnancy support garments ARTG 370870; all other products (postpartum, briefs, LBL) ARTG 370871
 - If the invoice URL cannot be found, ask for their order number and email and escalate to Christine
 
-RETURNS AND EXCHANGES (standard — applies outside the sale window):
+RETURNS AND EXCHANGES (standard — applies to orders placed OUTSIDE the sale window):
 
 EXCHANGES — EVIE HANDLES FULLY:
 - Check eligibility: unworn, unwashed, tags attached, original packaging, within 30 days
@@ -149,7 +136,7 @@ FAULTY ITEMS:
 - Direct to Refundid portal: <a href="https://portal.refundid.com/stores/everform-therapywear" target="_blank">Submit your faulty item here</a>
 - Ask for order number and clear photos of the fault
 - Always escalate to Christine as well
-- A faulty item is always escalated and never treated as a sale "store credit only" case, even if it was bought on sale
+- A faulty item is ALWAYS escalated and never treated as a sale "store credit only" case, even if it was bought on sale
 
 RETURN CONDITIONS:
 - In original as-new condition
@@ -167,7 +154,7 @@ SALE AND PROMOTIONAL PURCHASES:
 - Refunds and exchanges NOT offered
 - Store credit only
 
-FINAL SALE ITEMS — CRITICAL:
+FINAL SALE ITEMS:
 - NOT eligible for return, exchange OR store credit under ANY circumstances
 - Never direct to returns portal
 - Respond with empathy and escalate to Christine
@@ -176,7 +163,7 @@ BUNDLE PURCHASES:
 - Full refunds only when ALL items returned together
 - Partial returns: refund adjusted minus proportional bundle discount
 
-SHIPPING (standard — applies outside the sale window):
+SHIPPING (standard):
 - Standard and Express options available
 - Free standard shipping on Australian orders over $180, $10 flat rate under $180, Express $15 (free Express over $200)
 - International: free over $300 AUD; under $300 calculated by location, shipped with DHL
@@ -223,7 +210,6 @@ RULES:
 - Never state whether a mixed order ships separately or together — escalate to Christine
 - Never confirm a cancellation or pre-order refund yourself — escalate to Christine
 - Never go straight to booking a fitting — always offer Verifyt first
-- Never promise the Brillo Beauty bonus — it is subject to availability (first 40 orders Sun 20 June only)
 - During the sale window, returns are STORE CREDIT ONLY regardless of reason
 - Always format links as HTML anchor tags
 - NEVER give the customer ANY email address — escalations stay in this thread and Christine follows up here
@@ -269,17 +255,12 @@ function scrubEmails(text) {
 // Render a Gorgias macro verbatim (only swap name, links, sign-off)
 function renderMacro(macro, firstName) {
   var body = macro.body_text || macro.body_html || '';
-  // 1. personalise the customer name (variable form AND literal placeholder text)
   body = body.replace(/{{\s*customer\.first_name\s*}}/gi, firstName);
   body = body.replace(/Customer First Name/gi, firstName);
-  // 2. turn markdown links [text](url) into clickable HTML links
   body = body.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-  // 3. linkify any remaining bare URLs (skip ones already inside an href)
   body = body.replace(/(^|[^"'>=])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank">$2</a>');
-  // 4. make the sign-off clearly from Evie, not Christine / Client Care
   body = body.replace(/Everform Client Care/gi, 'Everform AI Customer Assistant');
   body = body.replace(/(regards,?\s*\n?\s*)Christine/gi, '$1Evie');
-  // 5. if the macro ends on a bare sign-off with no name, add Evie's
   if (/regards,?\s*$/i.test(body.trim())) {
     body = body.trim() + '\nEvie\nEverform AI Customer Assistant';
   }
@@ -491,6 +472,9 @@ async function processTicket(ticket_id) {
       return;
     }
 
+    // Search BOTH the message body AND the subject line for an order number
+    var searchText = customerMessage + ' ' + ticketSubject;
+
     var skipCheck = shouldSkip(ticketSubject, customerMessage, customerEmail);
     if (skipCheck.skip) {
       console.log('Skipping ticket ' + ticket_id + ' — reason: ' + skipCheck.reason);
@@ -530,7 +514,7 @@ async function processTicket(ticket_id) {
     var orderData = null;
     var orderContext = '';
     var isInvoiceQuery = /invoice|receipt|proof of purchase|artg|health insurance|rebate/i.test(customerMessage);
-    var orderMatch = customerMessage.match(/#?(\d{4,6})/);
+    var orderMatch = searchText.match(/#?(\d{4,6})/);
 
     if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
       orderData = await lookupOrder(orderMatch[0], customerEmail);
@@ -578,8 +562,6 @@ async function processTicket(ticket_id) {
     const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
     const isBriefPreorder = isBriefsQuery && /pre.?order|preorder|dispatch|ship|track|when|where|delay|arriv|status|received|haven|hasn/i.test(customerMessage);
 
-    // Routine sale-window return OR exchange → EOY SALE macro + EOY-Return queue (store credit, batch review).
-    // A faulty/damaged item is NOT routine — it stays in the urgent Escalation queue regardless of sale status.
     const isSaleReturnOrExchange = (isRefundQuery || isExchangeQuery) && isSaleOrder && !isFaulty;
 
     const needsEscalation =
@@ -594,8 +576,6 @@ async function processTicket(ticket_id) {
       /sweat/i.test(customerMessage) ||
       /two parcels|separate parcel|ship separately|shipped separately|ship together/i.test(customerMessage);
 
-    // Build ticket update: tags, plus (for true escalations only) assignment to Christine.
-    // Routine sale returns/exchanges go to the EOY-Return queue and are NOT assigned to Christine.
     var tags = [{ name: 'evie-replied' }];
     if (isSaleReturnOrExchange) tags.push({ name: 'EOY-Return' });
     if (needsEscalation) tags.push({ name: 'Escalation' });
@@ -627,9 +607,7 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
-    // EOY sale returns/exchanges macro
     const eoyReturnMacro = macros.find(function(m) { return m.name && /eoy|eofy/i.test(m.name); });
-    // Standard refund/return macro — exclude the EOY one so the standard path never grabs it
     const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name) && !/eoy|eofy/i.test(m.name); });
     const sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
 
@@ -641,7 +619,6 @@ async function processTicket(ticket_id) {
         + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
       console.log('Cancellation escalation reply for ticket ' + ticket_id);
     } else if (isSaleReturnOrExchange) {
-      // Routine sale order return/exchange — use the EOY SALE macro verbatim; fall back to store-credit text if macro missing
       if (eoyReturnMacro) {
         draftReply = renderMacro(eoyReturnMacro, customerFirstName);
         console.log('Sent verbatim EOY SALE returns macro for ticket ' + ticket_id);
@@ -708,7 +685,6 @@ async function processTicket(ticket_id) {
       return;
     }
 
-    // Safety net: strip any email address before sending so escalations stay inside Gorgias
     draftReply = scrubEmails(draftReply);
 
     const draftResponse = await fetch(
@@ -744,6 +720,8 @@ async function processTicket(ticket_id) {
 }
 
 app.get('/', function(req, res) { res.send('Evie server is running'); });
+
+app.post('/ping', function(req, res) { res.json({ ok: true }); });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function() { console.log('Evie server running on port ' + PORT); });
