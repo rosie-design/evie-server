@@ -171,7 +171,8 @@ SHIPPING (standard):
 
 SIZING ENQUIRIES — USE MACRO EXACTLY:
 - Always use the Size Enquiry Info macro EXACTLY as written
-- Never go straight to booking a fitting — Verifyt 3D scan is always the PRIMARY first option
+- If for any reason no macro is available, guide the customer yourself: if she already knows her measurements, point her to our sizing calculator (<a href="https://everformwear.com.au/pages/sizing" target="_blank">Find my size</a>); if she's unsure of her measurements, point her to <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">Verifyt 3D body scanning</a> or a <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">free online fitting consultation</a> to get measured first
+- On sizing up: if she's sensitive to a firm or compressive feel she may prefer to size up for a gentler fit, but note our sizing is calibrated for the most therapeutic support and comfort — if she has significant symptoms, recommend sticking with her measured size, and offer a <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">fit expert consultation</a> for a second opinion
 
 PROMOTIONAL CODES:
 - Escalate to Christine
@@ -210,7 +211,7 @@ RULES:
 - Sale sold-out pre-orders ship 7 July 2026 (never mention any other date); briefs underwear pre-orders are TBC — Christine follows up here
 - Never state whether a mixed order ships separately or together — escalate to Christine
 - Never confirm a cancellation or pre-order refund yourself — escalate to Christine
-- Never go straight to booking a fitting — always offer Verifyt first
+- If ever drafting sizing guidance without a macro, don't jump straight to booking a fitting — first offer the sizing calculator (known measurements) or Verifyt/fitting consultation (to get measured), and suggest sizing up cautiously given our garments' therapeutic design
 - During the sale window, returns are STORE CREDIT ONLY regardless of reason
 - Always format links as HTML anchor tags
 - NEVER give the customer ANY email address — escalations stay in this thread and Christine follows up here
@@ -402,6 +403,13 @@ async function lookupOrder(orderNumber, customerEmail) {
       console.log('Could not fetch invoice metafields:', err);
     }
 
+    var custFirstName = null;
+    if (order.customer && order.customer.first_name) {
+      custFirstName = order.customer.first_name;
+    } else if (order.shipping_address && order.shipping_address.first_name) {
+      custFirstName = order.shipping_address.first_name;
+    }
+
     return {
       orderNumber: order.name,
       fulfillmentStatus: effectiveStatus,
@@ -411,7 +419,8 @@ async function lookupOrder(orderNumber, customerEmail) {
       createdAt: order.created_at,
       lineItems: lineItemTitles,
       hasPreorder: hasPreorder,
-      invoiceUrl: invoiceUrl
+      invoiceUrl: invoiceUrl,
+      customerFirstName: custFirstName
     };
   } catch (err) {
     console.error('Order lookup error:', err);
@@ -494,13 +503,13 @@ async function createAffiliateWholesaleTicket(customerEmail, conversationText) {
     var data = await resp.json();
     if (!resp.ok) {
       console.error('Failed to create affiliate/wholesale ticket:', JSON.stringify(data));
-      return false;
+      return null;
     }
     console.log('Created affiliate/wholesale ticket ' + data.id + ' for ' + customerEmail);
-    return true;
+    return { ticketId: data.id };
   } catch (err) {
     console.error('createAffiliateWholesaleTicket error:', err);
-    return false;
+    return null;
   }
 }
 
@@ -537,6 +546,23 @@ app.post('/chat', async (req, res) => {
     }
 
     var macros = await getMacros();
+
+    // Deterministic sizing-macro forcing, mirroring the email side exactly:
+    // if the customer's latest message is a sizing question and a "Size
+    // Enquiry Info" macro exists, use it verbatim and skip Claude entirely,
+    // rather than trusting the model to pick it out of a list.
+    var lastUserMessage = messages.filter(function(m) { return m.role === 'user'; }).pop();
+    var lastUserText = lastUserMessage ? extractText(lastUserMessage.content) : '';
+    var isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(lastUserText);
+    var sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
+
+    if (isSizingQuery && sizeMacro) {
+      var sizingName = (orderData && orderData.customerFirstName) ? orderData.customerFirstName : 'there';
+      var sizingReply = renderMacro(sizeMacro, sizingName);
+      sizingReply = scrubEmails(sizingReply);
+      return res.json({ reply: sizingReply });
+    }
+
     var availableMacros = '';
     if (macros.length > 0) {
       availableMacros = '\n\nAVAILABLE MACROS (if one exactly matches the customer situation, reproduce it word for word, only swapping in the customer\'s name):\n\n';
@@ -551,15 +577,16 @@ app.post('/chat', async (req, res) => {
     var isAffiliateWholesale = /affiliate|wholesale|partner|collaborat|stockist/i.test(allUserText);
     if (isAffiliateWholesale && emailMatch) {
       var emailKey = emailMatch[0].toLowerCase();
-      var alreadyTicketed = affiliateTicketsCreated[emailKey] && (Date.now() - affiliateTicketsCreated[emailKey] < 24 * 60 * 60 * 1000);
+      var existingTicket = affiliateTicketsCreated[emailKey];
+      var alreadyTicketed = existingTicket && (Date.now() - existingTicket.time < 24 * 60 * 60 * 1000);
       if (!alreadyTicketed) {
-        var ticketCreated = await createAffiliateWholesaleTicket(emailMatch[0], allUserText);
-        if (ticketCreated) {
-          affiliateTicketsCreated[emailKey] = Date.now();
-          affiliateNote = '\n\nIMPORTANT: A ticket has just been created and assigned to Christine (Affiliate and Wholesale Channel Manager) with this customer\'s email (' + emailMatch[0] + '). Confirm to the customer that their details have been passed to Christine and she will personally follow up with them by email.\n';
+        var ticketResult = await createAffiliateWholesaleTicket(emailMatch[0], allUserText);
+        if (ticketResult) {
+          affiliateTicketsCreated[emailKey] = { time: Date.now(), ticketId: ticketResult.ticketId };
+          affiliateNote = '\n\nIMPORTANT: A support ticket (#' + ticketResult.ticketId + ') has just been created and assigned to Christine (Affiliate and Wholesale Channel Manager) using this customer\'s email (' + emailMatch[0] + '). Give the customer this reference number, #' + ticketResult.ticketId + ', as concrete confirmation, and tell them Christine will personally follow up with them by email.\n';
         }
       } else {
-        affiliateNote = '\n\nNOTE: A ticket for this affiliate/wholesale enquiry was already created for Christine recently. If the customer asks again, reassure them she has their details and will be in touch \u2014 no need to ask for their email again.\n';
+        affiliateNote = '\n\nNOTE: A ticket (#' + existingTicket.ticketId + ') for this affiliate/wholesale enquiry was already created for Christine recently. If the customer asks again, remind them of reference number #' + existingTicket.ticketId + ' and reassure them Christine has their details and will be in touch \u2014 no need to ask for their email again.\n';
       }
     }
 
