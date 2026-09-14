@@ -46,10 +46,9 @@ ALWAYS ESCALATE TO CHRISTINE:
 6. Mixed orders — whether items ship separately or together (policy not yet confirmed)
 7. Policy exception requests
 8. Final Sale disputes
-9. Affiliate or wholesale enquiries
-10. Promotional code issues
-11. SWEAT membership code not received or not working
-12. Anything Evie cannot fully resolve
+9. Promotional code issues
+10. SWEAT membership code not received or not working
+11. Anything Evie cannot fully resolve
 
 NEVER say "email our team" or reference hello@everformwear.com — Christine will follow up directly via this ticket. The ONLY email address Evie should ever reference is christine@everformwear.com and only when absolutely necessary — and NEVER to a customer.
 
@@ -196,7 +195,9 @@ Pelvic Floor Support Wear:
 - Pro Support Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild bladder or uterine prolapse, pelvic congestion syndrome
 
 AFFILIATES AND WHOLESALE:
-- Escalate to Christine immediately (she follows up here)
+- Direct the customer to our Partners (Affiliates + Retailers) page, where they can see program details (Health Professional Referral, The Everform Village, and Stockists) and apply directly: <a href="https://everformwear.com.au/pages/partners-affiliates-retailers" target="_blank">Partner with Everform</a>
+- Also offer to book a 30-minute call with our Founder, Rosie, to talk it through: <a href="https://calendly.com/rosieeverform/30min" target="_blank">Book a call with Rosie</a>
+- As a third option, the customer can simply leave their email here in the chat and our Affiliate and Wholesale Channel Manager, Christine, will personally follow up with them directly
 - Never give out any email address
 
 RULES:
@@ -450,6 +451,59 @@ async function getMacros() {
   }
 }
 
+// Dedup guard so the same email doesn't spawn a new ticket on every follow-up
+// message within (or shortly after) the same chat session. In-memory only —
+// resets on redeploy/restart, which just risks an occasional duplicate ticket
+// rather than a missed one.
+var affiliateTicketsCreated = {};
+
+async function createAffiliateWholesaleTicket(customerEmail, conversationText) {
+  try {
+    var gorgiasAuth = getGorgiasAuth();
+    var christineId = await getChristineUserId(gorgiasAuth);
+    var bodyText = 'Affiliate/Wholesale enquiry submitted via Evie live chat.\n\nCustomer email: ' + customerEmail + '\n\nConversation:\n' + conversationText;
+
+    var payload = {
+      customer: { email: customerEmail },
+      messages: [
+        {
+          sender: { email: customerEmail },
+          body_html: bodyText.replace(/\n/g, '<br>'),
+          body_text: bodyText,
+          channel: 'api',
+          from_agent: false,
+          via: 'api',
+          subject: 'Affiliate/Wholesale enquiry (live chat)'
+        }
+      ],
+      tags: [{ name: 'affiliate-wholesale' }, { name: 'evie-chat' }],
+      channel: 'api',
+      from_agent: false,
+      via: 'api',
+      subject: 'Affiliate/Wholesale enquiry (live chat)'
+    };
+    if (christineId) {
+      payload.assignee_user = { id: christineId };
+    }
+
+    var resp = await fetch('https://everformwear.gorgias.com/api/tickets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+      body: JSON.stringify(payload)
+    });
+    var data = await resp.json();
+    if (!resp.ok) {
+      console.error('Failed to create affiliate/wholesale ticket:', JSON.stringify(data));
+      return false;
+    }
+    console.log('Created affiliate/wholesale ticket ' + data.id + ' for ' + customerEmail);
+    return true;
+  } catch (err) {
+    console.error('createAffiliateWholesaleTicket error:', err);
+    return false;
+  }
+}
+
 app.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
@@ -493,6 +547,22 @@ app.post('/chat', async (req, res) => {
       });
     }
 
+    var affiliateNote = '';
+    var isAffiliateWholesale = /affiliate|wholesale|partner|collaborat|stockist/i.test(allUserText);
+    if (isAffiliateWholesale && emailMatch) {
+      var emailKey = emailMatch[0].toLowerCase();
+      var alreadyTicketed = affiliateTicketsCreated[emailKey] && (Date.now() - affiliateTicketsCreated[emailKey] < 24 * 60 * 60 * 1000);
+      if (!alreadyTicketed) {
+        var ticketCreated = await createAffiliateWholesaleTicket(emailMatch[0], allUserText);
+        if (ticketCreated) {
+          affiliateTicketsCreated[emailKey] = Date.now();
+          affiliateNote = '\n\nIMPORTANT: A ticket has just been created and assigned to Christine (Affiliate and Wholesale Channel Manager) with this customer\'s email (' + emailMatch[0] + '). Confirm to the customer that their details have been passed to Christine and she will personally follow up with them by email.\n';
+        }
+      } else {
+        affiliateNote = '\n\nNOTE: A ticket for this affiliate/wholesale enquiry was already created for Christine recently. If the customer asks again, reassure them she has their details and will be in touch \u2014 no need to ask for their email again.\n';
+      }
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -503,7 +573,7 @@ app.post('/chat', async (req, res) => {
       body: JSON.stringify({
         model: 'claude-sonnet-5',
         max_tokens: 800,
-        system: SYSTEM_PROMPT + orderContext + availableMacros,
+        system: SYSTEM_PROMPT + orderContext + availableMacros + affiliateNote,
         messages: messages
       })
     });
