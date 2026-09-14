@@ -393,7 +393,7 @@ app.post('/chat', async (req, res) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: ''claude-sonnet-5',
+        model: 'claude-sonnet-5',
         max_tokens: 800,
         system: SYSTEM_PROMPT,
         messages: messages
@@ -664,7 +664,7 @@ async function processTicket(ticket_id) {
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: ''claude-sonnet-5',
+          model: 'claude-sonnet-5',
           max_tokens: 1000,
           system: SYSTEM_PROMPT,
           messages: [
