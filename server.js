@@ -309,6 +309,13 @@ function shouldSkip(subject, body, senderEmail) {
 }
 
 // Shopify order lookup with invoice URL and pre-order detection
+var NON_PRODUCT_LINE_ITEM_TITLES = ['free return unlocked'];
+
+function isRealProductLineItem(li) {
+  var title = (li.title || '').toLowerCase().trim();
+  return NON_PRODUCT_LINE_ITEM_TITLES.indexOf(title) === -1;
+}
+
 async function lookupOrder(orderNumber, customerEmail) {
   try {
     var cleanOrder = orderNumber.replace('#', '').trim();
@@ -329,11 +336,12 @@ async function lookupOrder(orderNumber, customerEmail) {
     if (orders.length === 0) return null;
 
     var order = orders[0];
-    var fulfillment = order.fulfillments && order.fulfillments[0];
+    var allLineItems = order.line_items || [];
+    var realLineItems = allLineItems.filter(isRealProductLineItem);
 
     var lineItemTitles = [];
     var hasPreorder = false;
-    (order.line_items || []).forEach(function(li) {
+    realLineItems.forEach(function(li) {
       lineItemTitles.push(li.title);
       var props = li.properties || [];
       props.forEach(function(p) {
@@ -345,6 +353,37 @@ async function lookupOrder(orderNumber, customerEmail) {
         }
       });
     });
+
+    // Work out the real shipment status by ignoring the instantly-fulfilled
+    // "Free return unlocked" protection add-on, which otherwise makes Shopify
+    // report the whole order as "partial" the moment it's added, even though
+    // the actual product hasn't shipped yet.
+    var realLineItemIds = realLineItems.map(function(li) { return li.id; });
+    var fulfillments = order.fulfillments || [];
+    var shippedRealIds = {};
+    var realShipmentFulfillment = null;
+    fulfillments.forEach(function(f) {
+      var fLineItems = f.line_items || [];
+      var includesReal = false;
+      fLineItems.forEach(function(fli) {
+        if (realLineItemIds.indexOf(fli.id) !== -1) {
+          shippedRealIds[fli.id] = true;
+          includesReal = true;
+        }
+      });
+      if (includesReal) realShipmentFulfillment = f;
+    });
+    var shippedRealCount = Object.keys(shippedRealIds).length;
+    var effectiveStatus;
+    if (realLineItemIds.length === 0) {
+      effectiveStatus = order.fulfillment_status || 'unfulfilled';
+    } else if (shippedRealCount === 0) {
+      effectiveStatus = 'unfulfilled';
+    } else if (shippedRealCount >= realLineItemIds.length) {
+      effectiveStatus = 'fulfilled';
+    } else {
+      effectiveStatus = 'partially fulfilled';
+    }
 
     var invoiceUrl = null;
     try {
@@ -364,10 +403,10 @@ async function lookupOrder(orderNumber, customerEmail) {
 
     return {
       orderNumber: order.name,
-      fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
+      fulfillmentStatus: effectiveStatus,
       financialStatus: order.financial_status,
-      trackingNumber: fulfillment ? fulfillment.tracking_number : null,
-      trackingUrl: fulfillment ? fulfillment.tracking_url : null,
+      trackingNumber: realShipmentFulfillment ? realShipmentFulfillment.tracking_number : null,
+      trackingUrl: realShipmentFulfillment ? realShipmentFulfillment.tracking_url : null,
       createdAt: order.created_at,
       lineItems: lineItemTitles,
       hasPreorder: hasPreorder,
