@@ -401,7 +401,8 @@ app.post('/chat', async (req, res) => {
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data });
-    var reply = data.content && data.content[0] ? data.content[0].text : '';
+        var textBlock = (data.content || []).find(function(b) { return b.type === 'text'; });
+    var reply = textBlock ? textBlock.text : '';
     reply = scrubEmails(reply);
     res.json({ reply });
   } catch (err) {
