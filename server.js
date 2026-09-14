@@ -379,12 +379,81 @@ async function lookupOrder(orderNumber, customerEmail) {
   }
 }
 
+function extractText(content) {
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    return content.map(function(b) { return b.text || ''; }).join(' ');
+  }
+  return '';
+}
+
+function getGorgiasAuth() {
+  return 'Basic ' + Buffer.from(process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY).toString('base64');
+}
+
+var macrosCache = { data: null, fetchedAt: 0 };
+async function getMacros() {
+  var now = Date.now();
+  if (macrosCache.data && (now - macrosCache.fetchedAt) < 5 * 60 * 1000) {
+    return macrosCache.data;
+  }
+  try {
+    var resp = await fetch('https://everformwear.gorgias.com/api/macros?limit=50', {
+      method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': getGorgiasAuth() }
+    });
+    var data = await resp.json();
+    macrosCache.data = data.data || [];
+    macrosCache.fetchedAt = now;
+    return macrosCache.data;
+  } catch (err) {
+    console.log('Could not fetch macros:', err);
+    return macrosCache.data || [];
+  }
+}
+
 app.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Missing messages' });
     }
+
+    var allUserText = messages
+      .filter(function(m) { return m.role === 'user'; })
+      .map(function(m) { return extractText(m.content); })
+      .join(' ');
+
+    var orderMatch = allUserText.match(/#?([A-Za-z]{0,3}-?\d{4,6}[A-Za-z]{0,3})/);
+    var emailMatch = allUserText.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+
+    var orderContext = '';
+    if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
+      var orderData = await lookupOrder(orderMatch[1], emailMatch ? emailMatch[0] : null);
+      if (orderData) {
+        orderContext = '\n\nSHOPIFY ORDER DATA for ' + orderData.orderNumber + ':\n';
+        orderContext += '- Status: ' + orderData.fulfillmentStatus + '\n';
+        orderContext += '- Payment: ' + orderData.financialStatus + '\n';
+        orderContext += '- Items: ' + orderData.lineItems.join(', ') + '\n';
+        if (orderData.trackingNumber) orderContext += '- Tracking number: ' + orderData.trackingNumber + '\n';
+        if (orderData.trackingUrl) orderContext += '- Tracking URL: ' + orderData.trackingUrl + '\n';
+        if (orderData.invoiceUrl) orderContext += '- Invoice URL: ' + orderData.invoiceUrl + '\n';
+        if (orderData.hasPreorder) orderContext += '- CONTAINS A PRE-ORDER ITEM (sold-out sale size), ships 7 July 2026\n';
+      } else {
+        orderContext = '\n\nNOTE: Searched Shopify for order ' + orderMatch[1] + ' but found no matching order. Ask the customer to double check their order number and email.\n';
+      }
+    }
+
+    var macros = await getMacros();
+    var availableMacros = '';
+    if (macros.length > 0) {
+      availableMacros = '\n\nAVAILABLE MACROS (if one exactly matches the customer situation, reproduce it word for word, only swapping in the customer\'s name):\n\n';
+      macros.forEach(function(macro) {
+        if (macro.body_html || macro.body_text) {
+          availableMacros += '--- MACRO: ' + macro.name + ' ---\n' + (macro.body_text || macro.body_html || '') + '\n\n';
+        }
+      });
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -395,13 +464,13 @@ app.post('/chat', async (req, res) => {
       body: JSON.stringify({
         model: 'claude-sonnet-5',
         max_tokens: 800,
-        system: SYSTEM_PROMPT,
+        system: SYSTEM_PROMPT + orderContext + availableMacros,
         messages: messages
       })
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data });
-        var textBlock = (data.content || []).find(function(b) { return b.type === 'text'; });
+    var textBlock = (data.content || []).find(function(b) { return b.type === 'text'; });
     var reply = textBlock ? textBlock.text : '';
     reply = scrubEmails(reply);
     res.json({ reply });
@@ -515,10 +584,10 @@ async function processTicket(ticket_id) {
     var orderData = null;
     var orderContext = '';
     var isInvoiceQuery = /invoice|receipt|proof of purchase|artg|health insurance|rebate/i.test(customerMessage);
-    var orderMatch = searchText.match(/#?(\d{4,6})/);
+    var orderMatch = searchText.match(/#?([A-Za-z]{0,3}-?\d{4,6}[A-Za-z]{0,3})/);
 
     if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
-      orderData = await lookupOrder(orderMatch[0], customerEmail);
+      orderData = await lookupOrder(orderMatch[1], customerEmail);
       if (orderData) {
         orderContext = 'SHOPIFY ORDER DATA for ' + orderData.orderNumber + ':\n';
         orderContext += '- Status: ' + orderData.fulfillmentStatus + '\n';
@@ -678,8 +747,8 @@ async function processTicket(ticket_id) {
       });
 
       const claudeData = await claudeResponse.json();
-          var ticketTextBlock = (claudeData.content || []).find(function(b) { return b.type === 'text'; });
-    draftReply = ticketTextBlock ? ticketTextBlock.text : '';
+      var ticketTextBlock = (claudeData.content || []).find(function(b) { return b.type === 'text'; });
+      draftReply = ticketTextBlock ? ticketTextBlock.text : '';
     }
 
     if (!draftReply) {
