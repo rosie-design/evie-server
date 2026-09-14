@@ -678,7 +678,8 @@ async function processTicket(ticket_id) {
       });
 
       const claudeData = await claudeResponse.json();
-      draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
+          var ticketTextBlock = (claudeData.content || []).find(function(b) { return b.type === 'text'; });
+    draftReply = ticketTextBlock ? ticketTextBlock.text : '';
     }
 
     if (!draftReply) {
