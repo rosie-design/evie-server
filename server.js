@@ -471,56 +471,78 @@ app.post('/chat', async (req, res) => {
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data });
 
-    var reply = data.content && data.content[0] ? data.content[0].text : '';
+    var reply = '';
+    try {
+      if (data && Array.isArray(data.content)) {
+        var textBlock = data.content.find(function(b) { return b && b.type === 'text' && typeof b.text === 'string'; });
+        if (!textBlock) textBlock = data.content.find(function(b) { return b && typeof b.text === 'string'; });
+        if (textBlock) reply = textBlock.text;
+      }
+    } catch (e) { reply = ''; }
+    if (typeof reply !== 'string') reply = '';
 
-    // Look for the hidden escalation tag Evie may have added, e.g.
-    // [[ESCALATE type="faulty" email="a@b.com" order="1234" summary="hole in seam"]]
+    // Detect and strip the hidden escalation tag BEFORE sending to the customer.
+    // Kept minimal and defensive so it can never break the reply.
+    var escalationDetails = null;
     try {
       var tagMatch = reply.match(/\[\[ESCALATE\b([^\]]*)\]\]/i);
       if (tagMatch) {
-        var attrs = tagMatch[1];
-        function readAttr(name) {
-          var m = attrs.match(new RegExp(name + '\\s*=\\s*"([^"]*)"', 'i'));
-          return m ? m[1] : '';
-        }
-        var escType = readAttr('type') || 'other';
-        var escEmail = readAttr('email');
-        var escOrder = readAttr('order');
-        var escSummary = readAttr('summary');
-
-        // Remove the tag (and any trailing whitespace/newlines) from what the customer sees
-        reply = reply.replace(/\s*\[\[ESCALATE\b[^\]]*\]\]\s*$/i, '').trim();
-
-        // Build a short transcript for Christine
-        var transcript = messages.map(function(m) {
-          var who = m.role === 'user' ? 'Customer' : 'Evie';
-          var content = typeof m.content === 'string' ? m.content : '';
-          return who + ': ' + content;
-        }).join('\n');
-
-        // Create the ticket in the background — never block or break the reply
-        createChatTicket({
-          type: escType,
-          email: escEmail,
-          order: escOrder,
-          summary: escSummary,
-          transcript: transcript
-        }).catch(function(err) {
-          console.error('Background chat ticket error:', err);
-        });
+        var attrs = tagMatch[1] || '';
+        var typeM = attrs.match(/type\s*=\s*"([^"]*)"/i);
+        var emailM = attrs.match(/email\s*=\s*"([^"]*)"/i);
+        var orderM = attrs.match(/order\s*=\s*"([^"]*)"/i);
+        var summaryM = attrs.match(/summary\s*=\s*"([^"]*)"/i);
+        escalationDetails = {
+          type: typeM ? typeM[1] : 'other',
+          email: emailM ? emailM[1] : '',
+          order: orderM ? orderM[1] : '',
+          summary: summaryM ? summaryM[1] : ''
+        };
       }
     } catch (tagErr) {
-      console.error('Escalation tag handling error:', tagErr);
-      // Fall through — customer still gets their reply
+      console.error('Escalation tag parse error (ignored):', tagErr);
+      escalationDetails = null;
     }
 
-    // Safety net: never let an email address reach the customer
-    reply = scrubEmails(reply);
+    // Always remove any ESCALATE tag text from what the customer sees
+    try {
+      reply = reply.replace(/\s*\[\[ESCALATE\b[^\]]*\]\]\s*/gi, ' ').trim();
+    } catch (stripErr) {
+      console.error('Escalation strip error (ignored):', stripErr);
+    }
 
+    // Never let an email address reach the customer
+    try { reply = scrubEmails(reply); } catch (scrubErr) { console.error('scrub error (ignored):', scrubErr); }
+
+    // SEND THE REPLY NOW — the customer is served regardless of what happens next
     res.json({ reply });
+
+    // AFTER responding: create the Gorgias ticket in the background. Fully isolated —
+    // nothing here can affect the reply the customer already received.
+    if (escalationDetails) {
+      var transcript = '';
+      try {
+        transcript = messages.map(function(m) {
+          var who = (m && m.role === 'user') ? 'Customer' : 'Evie';
+          var content = (m && typeof m.content === 'string') ? m.content : '';
+          return who + ': ' + content;
+        }).join('\n');
+      } catch (trErr) {
+        transcript = '';
+      }
+      createChatTicket({
+        type: escalationDetails.type,
+        email: escalationDetails.email,
+        order: escalationDetails.order,
+        summary: escalationDetails.summary,
+        transcript: transcript
+      }).catch(function(err) {
+        console.error('Background chat ticket error:', err);
+      });
+    }
   } catch (err) {
     console.error('Chat error:', err);
-    res.status(500).json({ error: 'Server error' });
+    if (!res.headersSent) res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -793,7 +815,15 @@ async function processTicket(ticket_id) {
       });
 
       const claudeData = await claudeResponse.json();
-      draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
+      draftReply = '';
+      try {
+        if (claudeData && Array.isArray(claudeData.content)) {
+          var tb = claudeData.content.find(function(b) { return b && b.type === 'text' && typeof b.text === 'string'; });
+          if (!tb) tb = claudeData.content.find(function(b) { return b && typeof b.text === 'string'; });
+          if (tb) draftReply = tb.text;
+        }
+      } catch (e) { draftReply = ''; }
+      if (typeof draftReply !== 'string') draftReply = '';
     }
 
     if (!draftReply) {
