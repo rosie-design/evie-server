@@ -5,11 +5,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const RETURNS_PORTAL = 'https://everformwear.com.au/pages/returns-portal';
+
 const SYSTEM_PROMPT = `You are Evie, an AI customer service assistant for Everform Therapywear (everformwear.com.au) — an Australian brand specialising in physio-designed compression and supportwear for women.
 
 IMPORTANT: Always introduce yourself as an AI assistant in your first response. For example: "Hi [name], I'm Evie, Everform's AI customer service assistant. I'm here to help!"
 
-Your personality: warm, positive, solution-focused and concise. Get to the point — customers are busy. Never use apologetic language like "I'm so sorry" — instead be positive and solution-focused.
+Your personality: warm, positive, solution-focused and concise. Get to the point — customers are busy. Never use apologetic language like "I'm so sorry" for routine matters — instead be positive and solution-focused. HOWEVER, for a faulty or damaged item, genuine warmth and empathy come first.
 
 MACRO USAGE — CRITICAL:
 When a macro is provided to you, you MUST use it EXACTLY as written. Do not paraphrase, summarise, rewrite or change the content in any way. The ONLY changes you may make are:
@@ -20,22 +22,26 @@ Everything else must remain exactly as written in the macro.
 If no matching macro is available, use your training knowledge to respond.
 
 RESPONSE STYLE:
-- Keep responses SHORT — 2-3 sentences max unless using a macro which must be used in full
+- Keep responses SHORT — 2-3 sentences max unless using a macro which must be used in full, or gathering details for a faulty item
 - Be warm but efficient
 - Never apologise unnecessarily — be positive and solution-focused
 
 CONTACT AND ESCALATION — CRITICAL:
 - NEVER give the customer ANY email address — not hello@everformwear.com, and not Christine's email.
-- All escalations stay inside THIS conversation. Tell the customer that our customer service manager Christine will personally follow up with them HERE (in this same thread). The customer does not need to email anyone — Christine handles escalated tickets directly within our help desk and will reply right here.
-- Never tell a customer to "email us", "reach out by email", or "contact our team at" any address.
+- All escalations stay inside our system. Tell the customer that our customer service manager Christine will personally follow up with them. The customer does not need to email anyone.
 
 IMPORTANT - LINKS IN RESPONSES:
 When providing links, always format them as HTML anchor tags so they are clickable. For example: <a href="https://example.com" target="_blank">click here</a>. Always use descriptive link text, never show raw URLs.
 
+RETURNS & EXCHANGES PORTAL:
+The ONLY returns and exchanges portal is: ${RETURNS_PORTAL}
+When directing a customer to lodge a return or exchange, always link to it as: <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a>
+NEVER mention or link to Refundid or any portal.refundid.com address — it is no longer in use.
+
 ESCALATION RULES — CRITICAL:
-The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up with them here:
-- Weekdays: "Our customer service manager Christine will personally follow up with you here within 24 hours."
-- Weekends: "Our customer service manager Christine will personally follow up with you here within 48 hours."
+The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up:
+- Weekdays: "Our customer service manager Christine will personally follow up with you within 24 hours."
+- Weekends: "Our customer service manager Christine will personally follow up with you within 48 hours."
 
 ALWAYS ESCALATE TO CHRISTINE:
 1. Refund requests
@@ -46,96 +52,64 @@ ALWAYS ESCALATE TO CHRISTINE:
 6. Mixed orders — whether items ship separately or together (policy not yet confirmed)
 7. Policy exception requests
 8. Final Sale disputes
-9. Promotional code issues
-10. SWEAT membership code not received or not working
-11. Anything Evie cannot fully resolve
+9. Affiliate or wholesale enquiries
+10. Promotional code issues
+11. SWEAT membership code not received or not working
+12. Anything Evie cannot fully resolve
 
-NEVER say "email our team" or reference hello@everformwear.com — Christine will follow up directly via this ticket. The ONLY email address Evie should ever reference is christine@everformwear.com and only when absolutely necessary — and NEVER to a customer.
+WEBSITE CHAT ESCALATION — HOW TO CREATE A TICKET (CRITICAL):
+When you are talking to a customer in the WEBSITE CHAT and the conversation needs to reach Christine (a faulty/damaged item, or a return/refund/exchange that needs her), you create a support ticket for her by ending your reply with a special hidden tag. The customer never sees this tag — the system removes it. Format EXACTLY:
+[[ESCALATE type="TYPE" email="EMAIL" order="ORDER" summary="SHORT SUMMARY"]]
+Where:
+- TYPE is one of: faulty, return, exchange, refund, other
+- EMAIL is the customer's email if they gave one, otherwise leave empty like email=""
+- ORDER is the customer's order number if they gave one, otherwise leave empty like order=""
+- SUMMARY is a short plain description of the issue (e.g. "Hole in left seam of postpartum leggings")
+RULES FOR THE TAG:
+- Only add the tag ONCE, and only when you have gathered what you need (see the FAULTY flow below).
+- Put the tag on its very last line, after your normal friendly message.
+- To create a ticket, you need EITHER an email OR an order number. If the customer has given neither, ask for them first. If the customer clearly refuses to give an email, an order number alone is enough — proceed with the tag using order="..." and email="".
+- If the customer has given neither an email nor an order number and won't provide either, you may still escalate a faulty item (customer safety/goodwill) with both fields empty — but always ask first.
+- Never show the tag text to the customer or mention it. Never add the tag for a simple question you can answer yourself.
+
+FAULTY OR DAMAGED ITEM FLOW (WEBSITE CHAT) — CRITICAL:
+1. Lead with genuine empathy — a faulty item is frustrating and you want to make it right.
+2. Ask the customer for: the email on their order, their order number, and a short description of the fault. Let them know Christine will also ask them to send photos when she follows up. Do NOT ask them to upload photos in the chat — the chat cannot receive images.
+3. If the customer would rather not share their email, reassure them the order number alone is enough for Christine to find them.
+4. Once you have their email OR order number and a description, respond warmly confirming Christine will personally follow up (24 hours weekdays, 48 hours weekends) — here or by email — including to arrange photos of the fault. Then add the escalation tag with type="faulty".
+5. Do NOT send a faulty item to the returns portal. Faulty items go to Christine, not the self-service portal.
+
+RETURN ENQUIRY FLOW (WEBSITE CHAT):
+1. Briefly explain: full-priced items can be returned for refund, exchange or store credit within 30 days, in as-new condition (unworn, unwashed, tags and hygiene seals intact).
+2. Direct them to lodge it via <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> using their order number and the email used at checkout.
+3. If the order was placed during a sale/promotion, it is STORE CREDIT ONLY (no refund or exchange) — explain this kindly and note store credit has a 3 year expiry.
+4. If it is a REFUND they specifically want (not exchange/credit), or a sale/final-sale dispute, gather their email and/or order number and escalate to Christine with type="refund" (or type="return"), because refunds need her approval.
+
+SIZING vs EXCHANGE — IMPORTANT DISTINCTION:
+- If the customer wants HELP CHOOSING A SIZE ("what size should I buy", "will this fit", measurements) → this is a SIZING enquiry. Guide them to the Verifyt 3D scan first (see SIZING ENQUIRIES). Do NOT send them to the returns portal.
+- If the customer already has an item and wants to SWAP IT for a different size ("exchange", "wrong size", "need a different size") → this is an EXCHANGE. Direct them to <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> to lodge the exchange using their order number and checkout email. If they need more help, gather email and/or order number and escalate with type="exchange".
 
 STORE:
 - Website: everformwear.com.au
 - Customer Service Manager: Christine (handles all escalations directly inside the help desk — her email is internal only and must never be shared with customers)
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
-CURRENT SALE — BUY 2 SAVE 30% (16–20 JUNE 2026):
-
-SALE PERIOD:
-- Sale ran Tuesday 16 June to Sunday 20 June 2026, closing 11:59pm Sunday 20 June.
-- From Monday 22 June 2026 the full-price store resumed and the standard returns policy applies to new orders.
-- IMPORTANT: Orders PLACED during 16–20 June still fall under the sale returns terms below, even now that the sale is over.
-
-THE OFFER — BUY 2, SAVE 30%:
-- 30% off applied automatically at checkout when 2 or more qualifying items were in the cart. No code needed.
-- Single-item orders did NOT receive a discount.
-- Bundles were EXCLUDED — already discounted, did not qualify.
-
-SALE RETURNS AND EXCHANGES — STORE CREDIT ONLY:
-- All orders placed during the promotional window (9am Tue 16 June to 11:59pm Sun 20 June 2026) are eligible for STORE CREDIT ONLY — no returns or exchanges — regardless of reason.
-- Store credit has a 3 year expiry and can be used on any future Everform purchase.
-- For sale return or exchange enquiries, the "returns and exchanges on EOY SALE" macro is used: store credit only, customer lodges through the returns portal, store credit issued once the return is received and processed.
-- This sale returns rule OVERRIDES the standard returns policy for any order placed within the sale window.
-
-PRE-ORDER ITEMS:
-
-A) SALE SOLD-OUT SIZES (leggings and shorts that sold out during the sale):
-- Sizes that sold out were switched to "Pre-order". Any size showing "Pre-order" is sold out in current stock and will be fulfilled from incoming stock.
-- These pre-order items are scheduled to ship 7 JULY 2026. Always give 7 July 2026 as the ship date. Do NOT mention any other date.
-- When an order is flagged as containing a pre-order item, reassure the customer: the order is confirmed and paid; the pre-order item ships 7 July 2026; any in-stock items in the same order ship now.
-- LEGGINGS — POCKETS FREE UPGRADE: customers who pre-ordered a sold-out size of the original (no pockets) leggings will receive the new "With Pockets" version at NO extra cost. Always frame this as a free upgrade, never as a substitution problem.
-- SHORTS: pre-order shorts ship from their own incoming stock. There is no pockets version, so the upgrade message does NOT apply to shorts.
-- QUICK ANSWERS:
-  * "Is my order confirmed?" → Yes, your order is fully placed and paid. One or more items are on pre-order because that size sold out; it ships 7 July 2026.
-  * "When will it arrive?" → Pre-order items are scheduled to ship 7 July 2026; delivery follows normal transit times after that.
-  * "I ordered the leggings without pockets — what will I get?" → You'll receive the upgraded With-Pockets version at no extra charge.
-  * "Why does it say pre-order?" → That size sold out, so rather than remove it we let you reserve it from our incoming stock.
-- NOT YET DEFINED — ESCALATE TO CHRISTINE, DO NOT GUESS:
-  * Whether a MIXED order (pre-order item + in-stock item) ships in two parcels or holds and ships together.
-  * Cancelling or refunding a pre-order before it ships.
-
-B) BRIEFS (LBL Recovery Brief and Pro Support Brief) — UNDERWEAR PRE-ORDER:
-- SEPARATE from the sale sold-out pre-orders. Dispatch dates for underwear pre-orders are TO BE CONFIRMED. Do NOT give any date (do not say 7 July).
-- Let the customer know Christine will personally follow up with them here with the latest update. Do NOT give out any email address.
-- Always escalate to Christine.
-
 ORDER TRACKING (non pre-order):
 - Processing time is 3-5 business days (excluding weekends)
 - Orders placed before 1pm prioritised for same-day processing
 - Once shipped customers receive tracking link via email
 - Direct them to: <a href="https://everformwear.com.au/apps/aftership" target="_blank">Track your order</a>
-- If customer provides order number Evie will look up their order directly
+- If customer provides order number and email, we can look up their order directly
 
 SHOPIFY ORDER LOOKUP:
 - When a customer asks about their order status or tracking, ask for their order number and email address
-- Use these to look up their real order details from Shopify
 - Provide their actual fulfillment status and tracking link if available
-- If the order is flagged as containing a pre-order item, give the 7 July 2026 ship date
-- If order is not found, ask them to double check their order number and email; if still not found escalate to Christine
+- If order is not found, ask them to double check their order number and email
 
 INVOICE AND RECEIPT REQUESTS:
-- When a customer asks for their invoice or receipt, look up their order in Shopify using their order number and email
-- Retrieve the invoice URL from the order metafields
-- Send them a direct clickable link: <a href="[invoice_url]" target="_blank">Click here to view and download your invoice</a>
-- Let them know: "Your invoice includes your ARTG number which you will need for any health insurance rebate claims."
+- When a customer asks for their invoice or receipt, ask for their order number and the email used at checkout
+- Their invoice includes their ARTG number which they need for any health insurance rebate claims
 - ARTG numbers: Pregnancy support garments ARTG 370870; all other products (postpartum, briefs, LBL) ARTG 370871
-- If the invoice URL cannot be found, ask for their order number and email and escalate to Christine
-
-RETURNS AND EXCHANGES (standard — applies to orders placed OUTSIDE the sale window):
-
-EXCHANGES — EVIE HANDLES FULLY:
-- Check eligibility: unworn, unwashed, tags attached, original packaging, within 30 days
-- If eligible direct to: <a href="https://portal.refundid.com/stores/everform-therapywear" target="_blank">Start your exchange here</a>
-- Postpartum Briefs and LBL: exchange or store credit only, must be unopened
-
-REFUNDS AND RETURNS — USE MACRO, ESCALATE TO CHRISTINE:
-- Use the Refund Request macro EXACTLY as written
-- These must be approved by Christine — the ticket is tagged for her approval
-- Never promise or process refunds yourself
-
-FAULTY ITEMS:
-- Direct to Refundid portal: <a href="https://portal.refundid.com/stores/everform-therapywear" target="_blank">Submit your faulty item here</a>
-- Ask for order number and clear photos of the fault
-- Always escalate to Christine as well
-- A faulty item is ALWAYS escalated and never treated as a sale "store credit only" case, even if it was bought on sale
 
 RETURN CONDITIONS:
 - In original as-new condition
@@ -145,84 +119,70 @@ RETURN CONDITIONS:
 - Returned in original Everform box inside protective outer shipping box
 
 ELIGIBILITY BY PURCHASE TYPE:
-
-FULL-PRICED ITEMS:
-- May be returned for refund, exchange or store credit within 30 days
-
-SALE AND PROMOTIONAL PURCHASES:
-- Refunds and exchanges NOT offered
-- Store credit only
-
-FINAL SALE ITEMS:
-- NOT eligible for return, exchange OR store credit under ANY circumstances
-- Never direct to returns portal
-- Respond with empathy and escalate to Christine
-
-BUNDLE PURCHASES:
-- Full refunds only when ALL items returned together
-- Partial returns: refund adjusted minus proportional bundle discount
+FULL-PRICED ITEMS: May be returned for refund, exchange or store credit within 30 days
+SALE AND PROMOTIONAL PURCHASES: Store credit only — no refunds or exchanges (store credit has a 3 year expiry)
+FINAL SALE ITEMS: NOT eligible for return, exchange OR store credit — respond with empathy and escalate to Christine
 
 SHIPPING (standard):
-- Standard and Express options available
 - Free standard shipping on Australian orders over $180, $10 flat rate under $180, Express $15 (free Express over $200)
 - International: free over $300 AUD; under $300 calculated by location, shipped with DHL
 - Same day dispatch for orders placed before 1pm on business days
 - Express: 1-2 business days, Standard: 2-8 business days within Australia
 
-SIZING ENQUIRIES — USE MACRO EXACTLY:
-- Always use the Size Enquiry Info macro EXACTLY as written
-- If for any reason no macro is available, guide the customer yourself: if she already knows her measurements, point her to our sizing calculator (<a href="https://everformwear.com.au/pages/sizing" target="_blank">Find my size</a>); if she's unsure of her measurements, point her to <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">Verifyt 3D body scanning</a> or a <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">free online fitting consultation</a> to get measured first
-- On sizing up: if she's sensitive to a firm or compressive feel she may prefer to size up for a gentler fit, but note our sizing is calibrated for the most therapeutic support and comfort — if she has significant symptoms, recommend sticking with her measured size, and offer a <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">fit expert consultation</a> for a second opinion
-
-PROMOTIONAL CODES:
-- Escalate to Christine
-- Respond: "Our customer service manager Christine will personally look into this for you and follow up here within 24 hours (48 hours on weekends)."
+SIZING ENQUIRIES (help choosing a size):
+- The most accurate way to find a size is the free Verifyt 3D body scan — always offer this as the PRIMARY first option
+- Start the scan: <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">Click here to start your scan</a>
+- Prefer to self-measure? <a href="https://everformwear.com.au/pages/sizing" target="_blank">Sizing guide</a>
+- Or <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">book a fitting consultation</a>
+- Never go straight to booking a fitting — Verifyt 3D scan is always the PRIMARY first option
 
 HEALTH INSURANCE REBATES:
 - All Everform products registered on TGA — eligible for health insurance rebates in Australia
 - ARTG numbers: Pregnancy support garments ARTG 370870; Postpartum recovery garments ARTG 370871; Pro Support Brief ARTG 370871; LBL Recovery Brief ARTG 370871
 - Medical prescription if needed: <a href="https://drive.google.com/file/d/1yzC8Fruk1AfeK8tzsIyjNXUtCNY_C8Ia/view?usp=drive_link" target="_blank">Download the prescription pad</a>
-- Direct customers to request their invoice for proof of purchase — it contains the ARTG number
 
 PRODUCT SYMPTOM GUIDE:
 Pregnancy Support Garments (Legging, 8 inch Short, 5 inch Short):
 - Suitable for: pelvic girdle pain, SIJ pain, symphysis pubis dysfunction, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild stress incontinence, mild bladder or uterine prolapse, pelvic congestion syndrome, swelling management
-
 Postpartum Recovery Garments (Legging, 8 inch Short, 5 inch Short, Brief):
 - Suitable for: pelvic girdle pain, SIJ pain, abdominal muscle separation, perineal tears and stitches, C-section and episiotomy wounds, sciatica, mild/moderate varicose veins, mild stress incontinence, mild bladder or uterine prolapse, pelvic congestion syndrome
-
 Pelvic Floor Support Wear:
 - LBL Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild stress incontinence, pelvic congestion syndrome
 - Pro Support Brief: pelvic girdle pain, sciatica, low back pain, mild/moderate varicose veins, vulval varicosities, mild bladder or uterine prolapse, pelvic congestion syndrome
 
 AFFILIATES AND WHOLESALE:
-- Direct the customer to our Partners (Affiliates + Retailers) page, where they can see program details (Health Professional Referral, The Everform Village, and Stockists) and apply directly: <a href="https://everformwear.com.au/pages/partners-affiliates-retailers" target="_blank">Partner with Everform</a>
-- Also offer to book a 30-minute call with our Founder, Rosie, to talk it through: <a href="https://calendly.com/rosieeverform/30min" target="_blank">Book a call with Rosie</a>
-- As a third option, the customer can simply leave their email here in the chat and our Affiliate and Wholesale Channel Manager, Christine, will personally follow up with them directly
+- Escalate to Christine immediately (she follows up here)
 - Never give out any email address
 
 RULES:
 - ALWAYS introduce yourself as AI in first response
 - ALWAYS use macros EXACTLY as written — no changes except customer name
-- Keep replies SHORT — 2-3 sentences max unless using a macro
+- Keep replies SHORT — 2-3 sentences max unless using a macro or gathering faulty-item details
 - Never invent order details or tracking numbers
-- For sale-order returns or exchanges, use the EOY SALE returns macro — store credit only via the returns portal
-- A faulty or damaged item is ALWAYS escalated to Christine and never treated as a sale store-credit-only case
-- Sale sold-out pre-orders ship 7 July 2026 (never mention any other date); briefs underwear pre-orders are TBC — Christine follows up here
-- Never state whether a mixed order ships separately or together — escalate to Christine
-- Never confirm a cancellation or pre-order refund yourself — escalate to Christine
-- If ever drafting sizing guidance without a macro, don't jump straight to booking a fitting — first offer the sizing calculator (known measurements) or Verifyt/fitting consultation (to get measured), and suggest sizing up cautiously given our garments' therapeutic design
-- During the sale window, returns are STORE CREDIT ONLY regardless of reason
+- Faulty/damaged items → empathy, gather email and/or order number + description, escalate to Christine, NEVER the returns portal
+- Returns and exchanges of change-of-mind/size → the returns & exchanges portal (${RETURNS_PORTAL})
+- Sizing HELP (what size to buy) → Verifyt 3D scan first, NOT the returns portal
+- Never mention or link Refundid — it is retired
 - Always format links as HTML anchor tags
-- NEVER give the customer ANY email address — escalations stay in this thread and Christine follows up here
+- NEVER give the customer ANY email address — escalations stay in our system and Christine follows up
 - Always give escalation timeframe: 24hrs weekdays, 48hrs weekends
-- Tag every ticket Evie responds to with evie-replied
+- Use the [[ESCALATE ...]] tag to create a ticket ONLY in the website chat, only when the flow calls for it, only once, on the last line
 
 GORGIAS EMAIL REPLIES:
 Replace ONLY {{customer.first_name}} and other variables. Sign off with:
 "Warm regards,
 Evie
 Everform AI Customer Assistant"`;
+
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
+
+function gorgiasAuthHeader() {
+  return 'Basic ' + Buffer.from(
+    process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
+  ).toString('base64');
+}
 
 // Cache for Christine's Gorgias user id (only positive results cached, so it self-heals once she accepts her invite)
 var christineUserIdCache = null;
@@ -248,9 +208,9 @@ async function getChristineUserId(gorgiasAuth) {
   return null;
 }
 
-// Strip any email address from customer-facing replies — escalations must stay inside Gorgias
+// Strip any email address from customer-facing replies — escalations must stay inside our system
 function scrubEmails(text) {
-  text = text.replace(/\b[A-Za-z0-9._%+-]+@everformwear\.com\b/gi, 'Christine (who will reply to you right here)');
+  text = text.replace(/\b[A-Za-z0-9._%+-]+@everformwear\.com\b/gi, 'Christine (who will follow up with you)');
   return text;
 }
 
@@ -267,6 +227,107 @@ function renderMacro(macro, firstName) {
     body = body.trim() + '\nEvie\nEverform AI Customer Assistant';
   }
   return body;
+}
+
+// Create a Gorgias ticket from the WEBSITE CHAT so escalations reach Christine in-system.
+// Failure-safe: returns true/false, never throws to the caller.
+async function createChatTicket(details) {
+  try {
+    var gorgiasAuth = gorgiasAuthHeader();
+    var email = (details.email || '').trim();
+    var order = (details.order || '').trim();
+    var type = (details.type || 'other').trim().toLowerCase();
+    var summary = (details.summary || '').trim();
+    var transcript = (details.transcript || '').trim();
+
+    var typeLabels = {
+      faulty: 'faulty item',
+      return: 'return enquiry',
+      exchange: 'sizing/exchange',
+      refund: 'refund request',
+      other: 'enquiry'
+    };
+    var label = typeLabels[type] || 'enquiry';
+    var subject = 'Website chat — ' + label + (order ? ' (order ' + order + ')' : '');
+
+    // Gorgias needs a customer identity. Use the email the customer gave; if none, use a placeholder
+    // so Christine can still see the ticket and identify them from the order number.
+    var customerEmail = email || 'website-chat@everformwear.com';
+    var customerName = email ? email.split('@')[0] : 'Website chat customer';
+
+    var bodyLines = [];
+    bodyLines.push('New enquiry received via the website chat (Evie).');
+    bodyLines.push('');
+    bodyLines.push('Type: ' + label);
+    if (order) bodyLines.push('Order number: ' + order);
+    if (email) bodyLines.push('Customer email: ' + email);
+    if (!email && !order) bodyLines.push('NOTE: Customer did not provide an email or order number in chat.');
+    if (summary) bodyLines.push('Summary: ' + summary);
+    if (type === 'faulty') bodyLines.push('ACTION: Please follow up to arrange photos of the fault and resolve.');
+    bodyLines.push('');
+    if (transcript) {
+      bodyLines.push('--- Chat transcript ---');
+      bodyLines.push(transcript);
+    }
+    var bodyText = bodyLines.join('\n');
+
+    var tags = [{ name: 'evie-replied' }, { name: 'web-chat' }, { name: 'Escalation' }];
+
+    // Create the ticket
+    var createResp = await fetch('https://everformwear.gorgias.com/api/tickets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+      body: JSON.stringify({
+        subject: subject,
+        channel: 'email',
+        via: 'api',
+        tags: tags,
+        customer: { email: customerEmail, name: customerName },
+        messages: [
+          {
+            channel: 'email',
+            via: 'api',
+            from_agent: false,
+            source: {
+              from: { address: customerEmail },
+              to: [{ address: 'hello@everformwear.com' }]
+            },
+            body_text: bodyText,
+            body_html: bodyText.replace(/\n/g, '<br>')
+          }
+        ]
+      })
+    });
+
+    var created = await createResp.json();
+    if (!createResp.ok) {
+      console.error('Chat ticket creation failed:', JSON.stringify(created));
+      return false;
+    }
+
+    var newTicketId = created.id;
+    console.log('Created web-chat ticket ' + newTicketId + ' (' + label + ')');
+
+    // Assign to Christine if she is an active Gorgias user (self-heals once she accepts her invite)
+    try {
+      var christineId = await getChristineUserId(gorgiasAuth);
+      if (christineId && newTicketId) {
+        await fetch('https://everformwear.gorgias.com/api/tickets/' + newTicketId, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+          body: JSON.stringify({ assignee_user: { id: christineId } })
+        });
+        console.log('Assigned web-chat ticket ' + newTicketId + ' to Christine');
+      }
+    } catch (assignErr) {
+      console.log('Could not assign web-chat ticket to Christine:', assignErr);
+    }
+
+    return true;
+  } catch (err) {
+    console.error('createChatTicket error:', err);
+    return false;
+  }
 }
 
 // Auto-reply and non-customer email detection
@@ -311,13 +372,6 @@ function shouldSkip(subject, body, senderEmail) {
 }
 
 // Shopify order lookup with invoice URL and pre-order detection
-var NON_PRODUCT_LINE_ITEM_TITLES = ['free return unlocked'];
-
-function isRealProductLineItem(li) {
-  var title = (li.title || '').toLowerCase().trim();
-  return NON_PRODUCT_LINE_ITEM_TITLES.indexOf(title) === -1;
-}
-
 async function lookupOrder(orderNumber, customerEmail) {
   try {
     var cleanOrder = orderNumber.replace('#', '').trim();
@@ -338,12 +392,11 @@ async function lookupOrder(orderNumber, customerEmail) {
     if (orders.length === 0) return null;
 
     var order = orders[0];
-    var allLineItems = order.line_items || [];
-    var realLineItems = allLineItems.filter(isRealProductLineItem);
+    var fulfillment = order.fulfillments && order.fulfillments[0];
 
     var lineItemTitles = [];
     var hasPreorder = false;
-    realLineItems.forEach(function(li) {
+    (order.line_items || []).forEach(function(li) {
       lineItemTitles.push(li.title);
       var props = li.properties || [];
       props.forEach(function(p) {
@@ -355,37 +408,6 @@ async function lookupOrder(orderNumber, customerEmail) {
         }
       });
     });
-
-    // Work out the real shipment status by ignoring the instantly-fulfilled
-    // "Free return unlocked" protection add-on, which otherwise makes Shopify
-    // report the whole order as "partial" the moment it's added, even though
-    // the actual product hasn't shipped yet.
-    var realLineItemIds = realLineItems.map(function(li) { return li.id; });
-    var fulfillments = order.fulfillments || [];
-    var shippedRealIds = {};
-    var realShipmentFulfillment = null;
-    fulfillments.forEach(function(f) {
-      var fLineItems = f.line_items || [];
-      var includesReal = false;
-      fLineItems.forEach(function(fli) {
-        if (realLineItemIds.indexOf(fli.id) !== -1) {
-          shippedRealIds[fli.id] = true;
-          includesReal = true;
-        }
-      });
-      if (includesReal) realShipmentFulfillment = f;
-    });
-    var shippedRealCount = Object.keys(shippedRealIds).length;
-    var effectiveStatus;
-    if (realLineItemIds.length === 0) {
-      effectiveStatus = order.fulfillment_status || 'unfulfilled';
-    } else if (shippedRealCount === 0) {
-      effectiveStatus = 'unfulfilled';
-    } else if (shippedRealCount >= realLineItemIds.length) {
-      effectiveStatus = 'fulfilled';
-    } else {
-      effectiveStatus = 'partially fulfilled';
-    }
 
     var invoiceUrl = null;
     try {
@@ -403,24 +425,16 @@ async function lookupOrder(orderNumber, customerEmail) {
       console.log('Could not fetch invoice metafields:', err);
     }
 
-    var custFirstName = null;
-    if (order.customer && order.customer.first_name) {
-      custFirstName = order.customer.first_name;
-    } else if (order.shipping_address && order.shipping_address.first_name) {
-      custFirstName = order.shipping_address.first_name;
-    }
-
     return {
       orderNumber: order.name,
-      fulfillmentStatus: effectiveStatus,
+      fulfillmentStatus: order.fulfillment_status || 'unfulfilled',
       financialStatus: order.financial_status,
-      trackingNumber: realShipmentFulfillment ? realShipmentFulfillment.tracking_number : null,
-      trackingUrl: realShipmentFulfillment ? realShipmentFulfillment.tracking_url : null,
+      trackingNumber: fulfillment ? fulfillment.tracking_number : null,
+      trackingUrl: fulfillment ? fulfillment.tracking_url : null,
       createdAt: order.created_at,
       lineItems: lineItemTitles,
       hasPreorder: hasPreorder,
-      invoiceUrl: invoiceUrl,
-      customerFirstName: custFirstName
+      invoiceUrl: invoiceUrl
     };
   } catch (err) {
     console.error('Order lookup error:', err);
@@ -428,166 +442,15 @@ async function lookupOrder(orderNumber, customerEmail) {
   }
 }
 
-function extractText(content) {
-  if (typeof content === 'string') return content;
-  if (Array.isArray(content)) {
-    return content.map(function(b) { return b.text || ''; }).join(' ');
-  }
-  return '';
-}
-
-function getGorgiasAuth() {
-  return 'Basic ' + Buffer.from(process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY).toString('base64');
-}
-
-var macrosCache = { data: null, fetchedAt: 0 };
-async function getMacros() {
-  var now = Date.now();
-  if (macrosCache.data && (now - macrosCache.fetchedAt) < 5 * 60 * 1000) {
-    return macrosCache.data;
-  }
-  try {
-    var resp = await fetch('https://everformwear.gorgias.com/api/macros?limit=50', {
-      method: 'GET', headers: { 'Content-Type': 'application/json', 'Authorization': getGorgiasAuth() }
-    });
-    var data = await resp.json();
-    macrosCache.data = data.data || [];
-    macrosCache.fetchedAt = now;
-    return macrosCache.data;
-  } catch (err) {
-    console.log('Could not fetch macros:', err);
-    return macrosCache.data || [];
-  }
-}
-
-// Dedup guard so the same email doesn't spawn a new ticket on every follow-up
-// message within (or shortly after) the same chat session. In-memory only —
-// resets on redeploy/restart, which just risks an occasional duplicate ticket
-// rather than a missed one.
-var affiliateTicketsCreated = {};
-
-async function createAffiliateWholesaleTicket(customerEmail, conversationText) {
-  try {
-    var gorgiasAuth = getGorgiasAuth();
-    var christineId = await getChristineUserId(gorgiasAuth);
-    var bodyText = 'Affiliate/Wholesale enquiry submitted via Evie live chat.\n\nCustomer email: ' + customerEmail + '\n\nConversation:\n' + conversationText;
-
-    var payload = {
-      customer: { email: customerEmail },
-      messages: [
-        {
-          sender: { email: customerEmail },
-          body_html: bodyText.replace(/\n/g, '<br>'),
-          body_text: bodyText,
-          channel: 'api',
-          from_agent: false,
-          via: 'api',
-          subject: 'Affiliate/Wholesale enquiry (live chat)'
-        }
-      ],
-      tags: [{ name: 'affiliate-wholesale' }, { name: 'evie-chat' }],
-      channel: 'api',
-      from_agent: false,
-      via: 'api',
-      subject: 'Affiliate/Wholesale enquiry (live chat)'
-    };
-    if (christineId) {
-      payload.assignee_user = { id: christineId };
-    }
-
-    var resp = await fetch('https://everformwear.gorgias.com/api/tickets', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
-      body: JSON.stringify(payload)
-    });
-    var data = await resp.json();
-    if (!resp.ok) {
-      console.error('Failed to create affiliate/wholesale ticket:', JSON.stringify(data));
-      return null;
-    }
-    console.log('Created affiliate/wholesale ticket ' + data.id + ' for ' + customerEmail);
-    return { ticketId: data.id };
-  } catch (err) {
-    console.error('createAffiliateWholesaleTicket error:', err);
-    return null;
-  }
-}
+// ---------------------------------------------------------------------------
+// WEBSITE CHAT ENDPOINT
+// ---------------------------------------------------------------------------
 
 app.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Missing messages' });
-    }
-
-    var allUserText = messages
-      .filter(function(m) { return m.role === 'user'; })
-      .map(function(m) { return extractText(m.content); })
-      .join(' ');
-
-    var orderMatch = allUserText.match(/#?([A-Za-z]{0,3}-?\d{4,6}[A-Za-z]{0,3})/);
-    var emailMatch = allUserText.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
-
-    var orderContext = '';
-    if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
-      var orderData = await lookupOrder(orderMatch[1], emailMatch ? emailMatch[0] : null);
-      if (orderData) {
-        orderContext = '\n\nSHOPIFY ORDER DATA for ' + orderData.orderNumber + ':\n';
-        orderContext += '- Status: ' + orderData.fulfillmentStatus + '\n';
-        orderContext += '- Payment: ' + orderData.financialStatus + '\n';
-        orderContext += '- Items: ' + orderData.lineItems.join(', ') + '\n';
-        if (orderData.trackingNumber) orderContext += '- Tracking number: ' + orderData.trackingNumber + '\n';
-        if (orderData.trackingUrl) orderContext += '- Tracking URL: ' + orderData.trackingUrl + '\n';
-        if (orderData.invoiceUrl) orderContext += '- Invoice URL: ' + orderData.invoiceUrl + '\n';
-        if (orderData.hasPreorder) orderContext += '- CONTAINS A PRE-ORDER ITEM (sold-out sale size), ships 7 July 2026\n';
-      } else {
-        orderContext = '\n\nNOTE: Searched Shopify for order ' + orderMatch[1] + ' but found no matching order. Ask the customer to double check their order number and email.\n';
-      }
-    }
-
-    var macros = await getMacros();
-
-    // Deterministic sizing-macro forcing, mirroring the email side exactly:
-    // if the customer's latest message is a sizing question and a "Size
-    // Enquiry Info" macro exists, use it verbatim and skip Claude entirely,
-    // rather than trusting the model to pick it out of a list.
-    var lastUserMessage = messages.filter(function(m) { return m.role === 'user'; }).pop();
-    var lastUserText = lastUserMessage ? extractText(lastUserMessage.content) : '';
-    var isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(lastUserText);
-    var sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
-
-    if (isSizingQuery && sizeMacro) {
-      var sizingName = (orderData && orderData.customerFirstName) ? orderData.customerFirstName : 'there';
-      var sizingReply = renderMacro(sizeMacro, sizingName);
-      sizingReply = scrubEmails(sizingReply);
-      return res.json({ reply: sizingReply });
-    }
-
-    var availableMacros = '';
-    if (macros.length > 0) {
-      availableMacros = '\n\nAVAILABLE MACROS (if one exactly matches the customer situation, reproduce it word for word, only swapping in the customer\'s name):\n\n';
-      macros.forEach(function(macro) {
-        if (macro.body_html || macro.body_text) {
-          availableMacros += '--- MACRO: ' + macro.name + ' ---\n' + (macro.body_text || macro.body_html || '') + '\n\n';
-        }
-      });
-    }
-
-    var affiliateNote = '';
-    var isAffiliateWholesale = /affiliate|wholesale|partner|collaborat|stockist/i.test(allUserText);
-    if (isAffiliateWholesale && emailMatch) {
-      var emailKey = emailMatch[0].toLowerCase();
-      var existingTicket = affiliateTicketsCreated[emailKey];
-      var alreadyTicketed = existingTicket && (Date.now() - existingTicket.time < 24 * 60 * 60 * 1000);
-      if (!alreadyTicketed) {
-        var ticketResult = await createAffiliateWholesaleTicket(emailMatch[0], allUserText);
-        if (ticketResult) {
-          affiliateTicketsCreated[emailKey] = { time: Date.now(), ticketId: ticketResult.ticketId };
-          affiliateNote = '\n\nIMPORTANT: A support ticket (#' + ticketResult.ticketId + ') has just been created and assigned to Christine (Affiliate and Wholesale Channel Manager) using this customer\'s email (' + emailMatch[0] + '). Give the customer this reference number, #' + ticketResult.ticketId + ', as concrete confirmation, and tell them Christine will personally follow up with them by email.\n';
-        }
-      } else {
-        affiliateNote = '\n\nNOTE: A ticket (#' + existingTicket.ticketId + ') for this affiliate/wholesale enquiry was already created for Christine recently. If the customer asks again, remind them of reference number #' + existingTicket.ticketId + ' and reassure them Christine has their details and will be in touch \u2014 no need to ask for their email again.\n';
-      }
     }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -598,23 +461,72 @@ app.post('/chat', async (req, res) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-5',
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 800,
-        system: SYSTEM_PROMPT + orderContext + availableMacros + affiliateNote,
+        system: SYSTEM_PROMPT,
         messages: messages
       })
     });
+
     const data = await response.json();
     if (!response.ok) return res.status(response.status).json({ error: data });
-    var textBlock = (data.content || []).find(function(b) { return b.type === 'text'; });
-    var reply = textBlock ? textBlock.text : '';
+
+    var reply = data.content && data.content[0] ? data.content[0].text : '';
+
+    // Look for the hidden escalation tag Evie may have added, e.g.
+    // [[ESCALATE type="faulty" email="a@b.com" order="1234" summary="hole in seam"]]
+    try {
+      var tagMatch = reply.match(/\[\[ESCALATE\b([^\]]*)\]\]/i);
+      if (tagMatch) {
+        var attrs = tagMatch[1];
+        function readAttr(name) {
+          var m = attrs.match(new RegExp(name + '\\s*=\\s*"([^"]*)"', 'i'));
+          return m ? m[1] : '';
+        }
+        var escType = readAttr('type') || 'other';
+        var escEmail = readAttr('email');
+        var escOrder = readAttr('order');
+        var escSummary = readAttr('summary');
+
+        // Remove the tag (and any trailing whitespace/newlines) from what the customer sees
+        reply = reply.replace(/\s*\[\[ESCALATE\b[^\]]*\]\]\s*$/i, '').trim();
+
+        // Build a short transcript for Christine
+        var transcript = messages.map(function(m) {
+          var who = m.role === 'user' ? 'Customer' : 'Evie';
+          var content = typeof m.content === 'string' ? m.content : '';
+          return who + ': ' + content;
+        }).join('\n');
+
+        // Create the ticket in the background — never block or break the reply
+        createChatTicket({
+          type: escType,
+          email: escEmail,
+          order: escOrder,
+          summary: escSummary,
+          transcript: transcript
+        }).catch(function(err) {
+          console.error('Background chat ticket error:', err);
+        });
+      }
+    } catch (tagErr) {
+      console.error('Escalation tag handling error:', tagErr);
+      // Fall through — customer still gets their reply
+    }
+
+    // Safety net: never let an email address reach the customer
     reply = scrubEmails(reply);
+
     res.json({ reply });
   } catch (err) {
     console.error('Chat error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+// ---------------------------------------------------------------------------
+// GORGIAS EMAIL WEBHOOK
+// ---------------------------------------------------------------------------
 
 app.post('/gorgias-webhook', async (req, res) => {
   const ticket_id = String(req.body.ticket_id || '');
@@ -629,9 +541,7 @@ app.post('/gorgias-webhook', async (req, res) => {
 
 async function processTicket(ticket_id) {
   try {
-    const gorgiasAuth = 'Basic ' + Buffer.from(
-      process.env.GORGIAS_EMAIL + ':' + process.env.GORGIAS_API_KEY
-    ).toString('base64');
+    const gorgiasAuth = gorgiasAuthHeader();
 
     const ticketResponse = await fetch(
       'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
@@ -720,10 +630,10 @@ async function processTicket(ticket_id) {
     var orderData = null;
     var orderContext = '';
     var isInvoiceQuery = /invoice|receipt|proof of purchase|artg|health insurance|rebate/i.test(customerMessage);
-    var orderMatch = searchText.match(/#?([A-Za-z]{0,3}-?\d{4,6}[A-Za-z]{0,3})/);
+    var orderMatch = searchText.match(/#?(\d{4,6})/);
 
     if (orderMatch && process.env.SHOPIFY_API_TOKEN) {
-      orderData = await lookupOrder(orderMatch[1], customerEmail);
+      orderData = await lookupOrder(orderMatch[0], customerEmail);
       if (orderData) {
         orderContext = 'SHOPIFY ORDER DATA for ' + orderData.orderNumber + ':\n';
         orderContext += '- Status: ' + orderData.fulfillmentStatus + '\n';
@@ -830,8 +740,8 @@ async function processTicket(ticket_id) {
         console.log('Sent verbatim EOY SALE returns macro for ticket ' + ticket_id);
       } else {
         draftReply = 'Hi ' + customerFirstName + ',\n\n'
-          + 'Thanks so much for reaching out! As your order was placed during our Buy 2 Save 30% sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
-          + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. You can lodge your return through our returns portal, and once it is received and processed you will receive your store credit.\n\n'
+          + 'Thanks so much for reaching out! As your order was placed during our sale, sale purchases are eligible for store credit only — we are unable to offer returns or exchanges on sale orders.\n\n'
+          + 'The good news is your store credit has a 3 year expiry and can be used on any future Everform purchase. You can lodge your return through <a href="' + RETURNS_PORTAL + '" target="_blank">our returns & exchanges portal</a>, and once it is received and processed you will receive your store credit.\n\n'
           + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
         console.log('EOY macro not found — used store-credit fallback for ticket ' + ticket_id);
       }
@@ -870,7 +780,7 @@ async function processTicket(ticket_id) {
           'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-5',
+          model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
           system: SYSTEM_PROMPT,
           messages: [
@@ -883,8 +793,7 @@ async function processTicket(ticket_id) {
       });
 
       const claudeData = await claudeResponse.json();
-      var ticketTextBlock = (claudeData.content || []).find(function(b) { return b.type === 'text'; });
-      draftReply = ticketTextBlock ? ticketTextBlock.text : '';
+      draftReply = claudeData.content && claudeData.content[0] ? claudeData.content[0].text : '';
     }
 
     if (!draftReply) {
@@ -892,6 +801,9 @@ async function processTicket(ticket_id) {
       return;
     }
 
+    // Never let the email macros' [[ESCALATE]] tag (if the model ever emits one) reach a customer,
+    // and never leak an email address.
+    draftReply = draftReply.replace(/\s*\[\[ESCALATE\b[^\]]*\]\]\s*/gi, ' ').trim();
     draftReply = scrubEmails(draftReply);
 
     const draftResponse = await fetch(
