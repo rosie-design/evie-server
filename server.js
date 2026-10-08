@@ -22,9 +22,14 @@ Everything else must remain exactly as written in the macro.
 If no matching macro is available, use your training knowledge to respond.
 
 RESPONSE STYLE:
-- Keep responses SHORT — 2-3 sentences max unless using a macro which must be used in full, or gathering details for a faulty item
+- Keep responses SHORT — 2-3 sentences max unless using a macro which must be used in full, or walking a customer through sizing steps
 - Be warm but efficient
 - Never apologise unnecessarily — be positive and solution-focused
+- Every reply must be complete: finish every sentence and always end with the sign-off. A short complete reply is always better than a long one.
+
+PRE-ORDERS — CRITICAL:
+- Do NOT mention pre-orders, pre-order dispatch dates, pre-order shipping timeframes or "ships from" dates in any reply, for any product (including underwear/briefs and postpartum garments). Treat every product as a normal in-stock order.
+- If a customer specifically asks about a pre-order, do not give any details — escalate to Christine.
 
 CONTACT AND ESCALATION — CRITICAL:
 - NEVER give the customer ANY email address — not hello@everformwear.com, and not Christine's email.
@@ -45,10 +50,11 @@ The following situations must ALWAYS be escalated to Christine. Respond warmly a
 
 ALWAYS ESCALATE TO CHRISTINE:
 1. Refund requests
-2. Cancellation requests (including cancelling a pre-order)
-3. Faulty or damaged items
+2. Cancellation requests
+3. Wrong item sent (not a fault — we sent the wrong product)
 4. Sizing enquiries where customer is still unhappy after Evie's first response
-5. Briefs (underwear) pre-order queries
+5. Fit or feel problems with a garment they have received — it rolls down, they're unsure about the fit, or it doesn't feel right — and they haven't asked for a specific size swap. For these, say Christine will personally follow up within 1–2 business days. Do NOT suggest a size change, exchange or any outcome yourself — fit issues aren't always solved by a different size.
+5b. Any question about a pre-order
 6. Mixed orders — whether items ship separately or together (policy not yet confirmed)
 7. Policy exception requests
 8. Final Sale disputes
@@ -58,26 +64,26 @@ ALWAYS ESCALATE TO CHRISTINE:
 12. Anything Evie cannot fully resolve
 
 WEBSITE CHAT ESCALATION — HOW TO CREATE A TICKET (CRITICAL):
-When you are talking to a customer in the WEBSITE CHAT and the conversation needs to reach Christine (a faulty/damaged item, or a return/refund/exchange that needs her), you create a support ticket for her by ending your reply with a special hidden tag. The customer never sees this tag — the system removes it. Format EXACTLY:
+When you are talking to a customer in the WEBSITE CHAT and the conversation needs to reach Christine (a fit or feel problem, a wrong item, or a return/refund/exchange that needs her), you create a support ticket for her by ending your reply with a special hidden tag. The customer never sees this tag — the system removes it. Format EXACTLY:
 [[ESCALATE type="TYPE" email="EMAIL" order="ORDER" summary="SHORT SUMMARY"]]
 Where:
-- TYPE is one of: faulty, return, exchange, refund, other
+- TYPE is one of: fit, wrongitem, return, exchange, refund, other
 - EMAIL is the customer's email if they gave one, otherwise leave empty like email=""
 - ORDER is the customer's order number if they gave one, otherwise leave empty like order=""
-- SUMMARY is a short plain description of the issue (e.g. "Hole in left seam of postpartum leggings")
+- SUMMARY is a short plain description of the issue (e.g. "Postpartum leggings rolling down at the waist")
 RULES FOR THE TAG:
-- Only add the tag ONCE, and only when you have gathered what you need (see the FAULTY flow below).
+- Only add the tag ONCE, and only when you have gathered what you need.
 - Put the tag on its very last line, after your normal friendly message.
 - To create a ticket, you need EITHER an email OR an order number. If the customer has given neither, ask for them first. If the customer clearly refuses to give an email, an order number alone is enough — proceed with the tag using order="..." and email="".
-- If the customer has given neither an email nor an order number and won't provide either, you may still escalate a faulty item (customer safety/goodwill) with both fields empty — but always ask first.
 - Never show the tag text to the customer or mention it. Never add the tag for a simple question you can answer yourself.
 
-FAULTY OR DAMAGED ITEM FLOW (WEBSITE CHAT) — CRITICAL:
+FAULTY OR DAMAGED ITEM FLOW (WEBSITE CHAT AND EMAIL) — CRITICAL:
+A faulty item is a defect in the garment itself (seams, fabric, elastic, stitching, damage). This is different from a fit or feel problem (see escalation rule 5) and from a wrong item being sent (escalate).
 1. Lead with genuine empathy — a faulty item is frustrating and you want to make it right.
-2. Ask the customer for: the email on their order, their order number, and a short description of the fault. Let them know Christine will also ask them to send photos when she follows up. Do NOT ask them to upload photos in the chat — the chat cannot receive images.
-3. If the customer would rather not share their email, reassure them the order number alone is enough for Christine to find them.
-4. Once you have their email OR order number and a description, respond warmly confirming Christine will personally follow up (24 hours weekdays, 48 hours weekends) — here or by email — including to arrange photos of the fault. Then add the escalation tag with type="faulty".
-5. Do NOT send a faulty item to the returns portal. Faulty items go to Christine, not the self-service portal.
+2. Direct them to <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> to lodge a faulty item claim.
+3. Explain that in the portal they can request EITHER an exchange for a new item, OR a return and refund.
+4. Tell them they'll need their order details (order number and checkout email) and clear photos of the fault.
+5. Never pre-approve an outcome — every claim is assessed by our team once lodged. Do NOT add the escalation tag for a faulty item.
 
 RETURN ENQUIRY FLOW (WEBSITE CHAT):
 1. Briefly explain: full-priced items can be returned for refund, exchange or store credit within 30 days, in as-new condition (unworn, unwashed, tags and hygiene seals intact).
@@ -85,16 +91,17 @@ RETURN ENQUIRY FLOW (WEBSITE CHAT):
 3. If the order was placed during a sale/promotion, it is STORE CREDIT ONLY (no refund or exchange) — explain this kindly and note store credit has a 3 year expiry.
 4. If it is a REFUND they specifically want (not exchange/credit), or a sale/final-sale dispute, gather their email and/or order number and escalate to Christine with type="refund" (or type="return"), because refunds need her approval.
 
-SIZING vs EXCHANGE — IMPORTANT DISTINCTION:
-- If the customer wants HELP CHOOSING A SIZE ("what size should I buy", "will this fit", measurements) → this is a SIZING enquiry. Guide them to the Verifyt 3D scan first (see SIZING ENQUIRIES). Do NOT send them to the returns portal.
-- If the customer already has an item and wants to SWAP IT for a different size ("exchange", "wrong size", "need a different size") → this is an EXCHANGE. Direct them to <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> to lodge the exchange using their order number and checkout email. If they need more help, gather email and/or order number and escalate with type="exchange".
+SIZING vs EXCHANGE vs FIT PROBLEM — IMPORTANT DISTINCTION:
+- If the customer wants HELP CHOOSING A SIZE before buying ("what size should I buy", "will this fit", measurements) → this is a SIZING enquiry. Follow SIZING ENQUIRIES below. Do NOT send them to the returns portal.
+- If the customer already has an item and wants to SWAP IT for a specific different size ("exchange", "wrong size", "need a size up") → this is an EXCHANGE. In email, the "Returns & Exchange General" macro is used. In chat, direct them to <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> to lodge the exchange using their order number and checkout email (exchanges are within 30 days of delivery). If they want to exchange but don't know which size, help them with SIZING ENQUIRIES first.
+- If the customer has an item that rolls down, they're unsure about the fit, or it doesn't feel right, and they haven't asked for a specific swap → this is a FIT PROBLEM. Acknowledge the specific issue and tell them Christine will personally follow up within 1–2 business days. In chat, gather their email and/or order number and escalate with type="fit".
 
 STORE:
 - Website: everformwear.com.au
 - Customer Service Manager: Christine (handles all escalations directly inside the help desk — her email is internal only and must never be shared with customers)
 - Products: Compression shorts, leggings, underwear (Pro Support Brief, LBL Brief, Postpartum Brief), pregnancy support garments, therapeutic supportwear
 
-ORDER TRACKING (non pre-order):
+ORDER TRACKING:
 - Processing time is 3-5 business days (excluding weekends)
 - Orders placed before 1pm prioritised for same-day processing
 - Once shipped customers receive tracking link via email
@@ -129,12 +136,40 @@ SHIPPING (standard):
 - Same day dispatch for orders placed before 1pm on business days
 - Express: 1-2 business days, Standard: 2-8 business days within Australia
 
-SIZING ENQUIRIES (help choosing a size):
-- The most accurate way to find a size is the free Verifyt 3D body scan — always offer this as the PRIMARY first option
-- Start the scan: <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">Click here to start your scan</a>
-- Prefer to self-measure? <a href="https://everformwear.com.au/pages/sizing" target="_blank">Sizing guide</a>
-- Or <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">book a fitting consultation</a>
-- Never go straight to booking a fitting — Verifyt 3D scan is always the PRIMARY first option
+SIZING ENQUIRIES (help choosing a size before buying):
+Use ONLY the size chart below. Never recommend a size from memory.
+1. If you don't know which product they want, ask that first (one question). The product tells you the measurements needed and which size names to use.
+2. Tell them what to measure:
+   - Pregnancy styles: hips only, just before buying.
+   - Postpartum styles: hips at 36–37 weeks pregnant, or hips + stomach any time after birth. Remind them to only try it on after giving birth.
+   - Pro Support / LBL / briefs: hips + stomach, just before buying.
+3. Offer two ways to measure:
+   - The free Verifyt 3D body scan (most accurate — manual measurements can vary by 2–5 cm): <a href="https://verifytsdkwidget.page.link/BB5w" target="_blank">start your 3D scan</a>
+   - A tape measure, following <a href="https://cdn.shopify.com/videos/c/vp/86e74ef570f448368676654b44850eaa/86e74ef570f448368676654b44850eaa.HD-720p-3.0Mbps-30604195.mp4" target="_blank">our how-to-measure video</a> (having someone help is more accurate)
+   They can also use the "Find my size" calculator on <a href="https://everformwear.com.au/pages/sizing" target="_blank">our sizing page</a>.
+4. When they give you measurements and the product, check the chart and state the size: "Your measurements put you in [size] for the [product]."
+   - If the product needs a stomach measurement and they've only given hips, ask for their stomach measurement before recommending.
+   - Between sizes: our garments are designed to feel snug; if they prefer a more relaxed feel, size up.
+   - If hip and stomach point to different sizes, measurements are outside the chart, or the size doesn't exist in that range: tell them what the chart shows and offer a free <a href="https://calendly.com/d/47n-rz5-hfr/fitting-consultation" target="_blank">online fitting consultation</a>.
+5. Never guarantee a fit. Questions about whether a garment suits a medical condition go to Rosie (escalate to Christine to pass on).
+6. Never go straight to booking a fitting — measuring (scan or tape) always comes first.
+
+SIZE CHART (cm). Stomach applies to postpartum, Pro Support and brief styles only; pregnancy styles are sized by max hip only.
+New "With Pockets" range & briefs | Original range | Max hip | Max stomach
+XXXS | XXXS | 79–84 | 68–73
+XXS | XXS | 85–90 | 74–79
+XS | XS | 91–96 | 80–85
+S | S | 97–102 | 86–91
+M | M | 103–108 | 92–97
+L | Curve | 109–114 | 98–103
+XL | Curve I | 115–120 | 104–109
+XXL | Curve II | 121–126 | 110–115
+Plus 1 | Curve III | New 127–135 / Original 127–132 | New 116–124 / Original 115–120
+Plus 2 | — | 136–147 | 125–136
+Plus 3 | — | 148–159 | 137–148
+Plus 4 | — | 160–171 | 149–160
+Plus 5 | — | 172–183 | 161–172
+Notes: Plus 2–5 exist in the new "With Pockets" range only; the Original range tops out at Curve III. New-range XXL and Plus 1 are slightly more generous than Original Curve II and Curve III.
 
 HEALTH INSURANCE REBATES:
 - All Everform products registered on TGA — eligible for health insurance rebates in Australia
@@ -157,15 +192,17 @@ AFFILIATES AND WHOLESALE:
 RULES:
 - ALWAYS introduce yourself as AI in first response
 - ALWAYS use macros EXACTLY as written — no changes except customer name
-- Keep replies SHORT — 2-3 sentences max unless using a macro or gathering faulty-item details
+- Keep replies SHORT — 2-3 sentences max unless using a macro or giving sizing steps
 - Never invent order details or tracking numbers
-- Faulty/damaged items → empathy, gather email and/or order number + description, escalate to Christine, NEVER the returns portal
+- Never mention pre-orders or pre-order dates
+- Faulty/damaged items → empathy, then the returns & exchanges portal (${RETURNS_PORTAL}) — exchange or return + refund, with order details and photos of the fault
+- Fit or feel problems (rolling down, unsure about fit) → Christine follows up within 1–2 business days; never suggest a size change yourself
 - Returns and exchanges of change-of-mind/size → the returns & exchanges portal (${RETURNS_PORTAL})
-- Sizing HELP (what size to buy) → Verifyt 3D scan first, NOT the returns portal
+- Sizing HELP (what size to buy) → product first, then measure (Verifyt scan or tape + video), then size from the chart, NOT the returns portal
 - Never mention or link Refundid — it is retired
 - Always format links as HTML anchor tags
 - NEVER give the customer ANY email address — escalations stay in our system and Christine follows up
-- Always give escalation timeframe: 24hrs weekdays, 48hrs weekends
+- Always give escalation timeframe: 24hrs weekdays, 48hrs weekends (fit or feel problems: 1–2 business days)
 - Use the [[ESCALATE ...]] tag to create a ticket ONLY in the website chat, only when the flow calls for it, only once, on the last line
 
 GORGIAS EMAIL REPLIES:
@@ -229,6 +266,51 @@ function renderMacro(macro, firstName) {
   return body;
 }
 
+// Call Claude and detect replies that were cut off by the token limit.
+// Returns { text, truncated }. Retries once with a higher limit before reporting truncation.
+async function callClaude(system, messages, maxTokens) {
+  var limits = [maxTokens, maxTokens * 2];
+  var lastText = '';
+  for (var i = 0; i < limits.length; i++) {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        max_tokens: limits[i],
+        system: system,
+        messages: messages
+      })
+    });
+    var data = await resp.json();
+    if (!resp.ok) {
+      var apiErr = new Error('Anthropic API error');
+      apiErr.status = resp.status;
+      apiErr.data = data;
+      throw apiErr;
+    }
+    var text = '';
+    try {
+      if (data && Array.isArray(data.content)) {
+        var tb = data.content.find(function(b) { return b && b.type === 'text' && typeof b.text === 'string'; });
+        if (!tb) tb = data.content.find(function(b) { return b && typeof b.text === 'string'; });
+        if (tb) text = tb.text;
+      }
+    } catch (e) { text = ''; }
+    if (typeof text !== 'string') text = '';
+    lastText = text;
+    if (data.stop_reason !== 'max_tokens') {
+      return { text: text, truncated: false };
+    }
+    console.log('Claude reply hit max_tokens (' + limits[i] + ') — ' + (i === 0 ? 'retrying with higher limit' : 'giving up'));
+  }
+  return { text: lastText, truncated: true };
+}
+
 // Create a Gorgias ticket from the WEBSITE CHAT so escalations reach Christine in-system.
 // Failure-safe: returns true/false, never throws to the caller.
 async function createChatTicket(details) {
@@ -242,6 +324,8 @@ async function createChatTicket(details) {
 
     var typeLabels = {
       faulty: 'faulty item',
+      fit: 'fit/feel issue',
+      wrongitem: 'wrong item sent',
       return: 'return enquiry',
       exchange: 'sizing/exchange',
       refund: 'refund request',
@@ -453,33 +537,18 @@ app.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'Missing messages' });
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-5',
-        max_tokens: 800,
-        system: SYSTEM_PROMPT,
-        messages: messages
-      })
-    });
-
-    const data = await response.json();
-    if (!response.ok) return res.status(response.status).json({ error: data });
-
-    var reply = '';
+    var result;
     try {
-      if (data && Array.isArray(data.content)) {
-        var textBlock = data.content.find(function(b) { return b && b.type === 'text' && typeof b.text === 'string'; });
-        if (!textBlock) textBlock = data.content.find(function(b) { return b && typeof b.text === 'string'; });
-        if (textBlock) reply = textBlock.text;
-      }
-    } catch (e) { reply = ''; }
-    if (typeof reply !== 'string') reply = '';
+      result = await callClaude(SYSTEM_PROMPT, messages, 1000);
+    } catch (apiErr) {
+      return res.status(apiErr.status || 500).json({ error: apiErr.data || 'API error' });
+    }
+
+    var reply = result.text;
+    if (result.truncated) {
+      // Never show a half-finished reply to the customer
+      reply = "I want to make sure I give you a complete answer — could you tell me a little more about what you need help with, and I'll take it from there?";
+    }
 
     // Detect and strip the hidden escalation tag BEFORE sending to the customer.
     // Kept minimal and defensive so it can never break the reply.
@@ -664,12 +733,9 @@ async function processTicket(ticket_id) {
         if (orderData.trackingNumber) orderContext += '- Tracking number: ' + orderData.trackingNumber + '\n';
         if (orderData.trackingUrl) orderContext += '- Tracking URL: ' + orderData.trackingUrl + '\n';
         if (orderData.invoiceUrl) orderContext += '- Invoice URL: ' + orderData.invoiceUrl + '\n';
-        if (orderData.hasPreorder) orderContext += '- CONTAINS A PRE-ORDER ITEM (sold-out sale size), ships 7 July 2026\n';
+        if (orderData.createdAt) orderContext += '- Order placed: ' + orderData.createdAt + '\n';
         orderContext += '\n';
-
-        if (orderData.hasPreorder) {
-          orderContext += 'IMPORTANT: This order includes a pre-order item (a size that sold out during the sale). Reassure the customer the order is confirmed and paid; the pre-order item is scheduled to ship 7 July 2026; any in-stock items ship now. If they pre-ordered an original no-pockets legging, tell them they will receive the upgraded With-Pockets version at no extra cost. Do NOT state whether items ship in separate parcels — if asked, escalate to Christine.\n\n';
-        }
+        // Pre-order messaging removed (Oct 2026) — do not reintroduce pre-order dates or details here.
 
         if (isInvoiceQuery && orderData.invoiceUrl) {
           orderContext += 'IMPORTANT: Customer is asking about their invoice. Send them this link: ' + orderData.invoiceUrl + ' and remind them it contains their ARTG number for health insurance claims.\n\n';
@@ -694,20 +760,24 @@ async function processTicket(ticket_id) {
 
     const isCancellation = /cancel|cancellation/i.test(customerMessage);
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
-    const isExchangeQuery = /exchange|swap|different size|different style|wrong size/i.test(customerMessage);
-    const isFaulty = /faulty|damaged|defect|broken|wrong.item/i.test(customerMessage);
+    const wantsRefund = /refund|money back|reimburse/i.test(customerMessage);
+    const isExchangeQuery = /exchange|swap|different size|different style|wrong size|size (up|down)|bigger size|smaller size/i.test(customerMessage);
+    const isWrongItem = /wrong.item|sent (me )?the wrong|received the wrong|not what i ordered/i.test(customerMessage);
+    const isFaulty = /faulty|damaged|defect|broken/i.test(customerMessage) && !isWrongItem;
+    const isFitIssue = /roll(s|ed|ing)? down|keeps? rolling|slid(es|ing)? down|slipp(ing|s) down|unsure (about|of) (the )?(fit|size|sizing)|not sure (about|of) (the )?(fit|size|sizing)|doesn'?t (feel|fit) right|don'?t think (it|they) fit|fit (issue|problem)|uncomfortable|digs? in|digging in/i.test(customerMessage);
     const isSizingQuery = /size|sizing|fit|too tight|too small|too big|too large|measurements|measure|which size|what size/i.test(customerMessage);
-    const isBriefsQuery = /brief|lbl|pro support/i.test(customerMessage);
-    const isBriefPreorder = isBriefsQuery && /pre.?order|preorder|dispatch|ship|track|when|where|delay|arriv|status|received|haven|hasn/i.test(customerMessage);
+    const hasMeasurements = /\d{2,3}(\.\d)?\s*(cm|centimet)/i.test(customerMessage);
 
     const isSaleReturnOrExchange = (isRefundQuery || isExchangeQuery) && isSaleOrder && !isFaulty;
+    // A straightforward request to swap sizes — handled with the "Returns & Exchange General" macro, no escalation
+    const isPlainExchange = isExchangeQuery && !wantsRefund && !isFaulty && !isWrongItem && !isFitIssue && !isSaleReturnOrExchange;
 
     const needsEscalation =
       isCancellation ||
-      isFaulty ||
-      (isRefundQuery && !isSaleReturnOrExchange) ||
+      isWrongItem ||
+      (isFitIssue && !isFaulty) ||
+      (isRefundQuery && !isSaleReturnOrExchange && !isPlainExchange && !isFaulty) ||
       /final.sale|policy.exception/i.test(customerMessage) ||
-      isBriefsQuery ||
       /pre.order|preorder/i.test(customerMessage) ||
       /affiliate|wholesale|partner|collaborat/i.test(customerMessage) ||
       /promo.?code|discount.code|voucher/i.test(customerMessage) ||
@@ -716,6 +786,8 @@ async function processTicket(ticket_id) {
 
     var tags = [{ name: 'evie-replied' }];
     if (isSaleReturnOrExchange) tags.push({ name: 'EOY-Return' });
+    if (isFaulty) tags.push({ name: 'Faulty-Portal' });
+    if (isFitIssue && !isFaulty) tags.push({ name: 'Fit-Issue' });
     if (needsEscalation) tags.push({ name: 'Escalation' });
 
     var ticketUpdate = { tags: tags };
@@ -745,6 +817,7 @@ async function processTicket(ticket_id) {
     const macrosData = await macrosResponse.json();
     const macros = macrosData.data || [];
 
+    const exchangeMacro = macros.find(function(m) { return m.name && /returns?\s*(&|and)\s*exchanges?\s*general/i.test(m.name); });
     const eoyReturnMacro = macros.find(function(m) { return m.name && /eoy|eofy/i.test(m.name); });
     const refundMacro = macros.find(function(m) { return m.name && /(refund|return)/i.test(m.name) && !/eoy|eofy/i.test(m.name); });
     const sizeMacro = macros.find(function(m) { return m.name && /size enquiry/i.test(m.name); });
@@ -767,15 +840,13 @@ async function processTicket(ticket_id) {
           + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
         console.log('EOY macro not found — used store-credit fallback for ticket ' + ticket_id);
       }
-    } else if (isRefundQuery && refundMacro) {
+    } else if (isPlainExchange && exchangeMacro) {
+      draftReply = renderMacro(exchangeMacro, customerFirstName);
+      console.log('Sent verbatim Returns & Exchange General macro for ticket ' + ticket_id);
+    } else if (isRefundQuery && refundMacro && !isFaulty && !isFitIssue && !isWrongItem) {
       draftReply = renderMacro(refundMacro, customerFirstName);
       console.log('Sent verbatim refund macro for ticket ' + ticket_id);
-    } else if (isBriefPreorder) {
-      draftReply = 'Hi ' + customerFirstName + ',\n\n'
-        + 'Thanks so much for your patience! Dispatch dates for our underwear pre-orders (the LBL Recovery Brief and Pro Support Brief) are still to be confirmed. Our customer service manager Christine will personally follow up with you here within ' + followUpTime + ' with the latest update on your order.\n\n'
-        + 'Warm regards,\nEvie\nEverform AI Customer Assistant';
-      console.log('Brief pre-order open-ended reply for ticket ' + ticket_id);
-    } else if (isSizingQuery && sizeMacro) {
+    } else if (isSizingQuery && sizeMacro && !isFitIssue && !isFaulty && !isWrongItem && !hasMeasurements) {
       draftReply = renderMacro(sizeMacro, customerFirstName);
       console.log('Sent verbatim sizing macro for ticket ' + ticket_id);
     } else {
@@ -790,40 +861,42 @@ async function processTicket(ticket_id) {
       }
 
       var escalationNote = '';
-      if (needsEscalation) {
+      if (isFitIssue && !isFaulty) {
+        escalationNote = '\n\nNOTE: This is a FIT OR FEEL problem. Acknowledge the specific issue they described, and tell the customer Christine will personally follow up with them HERE (in this same conversation) within 1–2 business days. Do NOT suggest a size change, exchange or any outcome. Do NOT give out any email address.';
+      } else if (needsEscalation) {
         escalationNote = '\n\nNOTE: This ticket needs escalation. Tell the customer Christine will personally follow up with them HERE (in this same conversation) within ' + followUpTime + '. Do NOT give out any email address.';
+      } else if (isFaulty) {
+        escalationNote = '\n\nNOTE: This is a FAULTY item. Follow the FAULTY OR DAMAGED ITEM FLOW: empathy first, then direct them to the returns & exchanges portal, explain they can request an exchange for a new item or a return and refund there, and that they will need their order details and clear photos of the fault. Do NOT escalate to Christine.';
       }
 
-      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-5',
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: [
-            {
-              role: 'user',
-              content: existingThreadContext + orderContext + availableMacros + 'Draft a reply to this customer email. Customer name: ' + customerFirstName + '. Their message: ' + customerMessage + escalationNote
-            }
-          ]
-        })
-      });
-
-      const claudeData = await claudeResponse.json();
-      draftReply = '';
+      var claudeResult;
       try {
-        if (claudeData && Array.isArray(claudeData.content)) {
-          var tb = claudeData.content.find(function(b) { return b && b.type === 'text' && typeof b.text === 'string'; });
-          if (!tb) tb = claudeData.content.find(function(b) { return b && typeof b.text === 'string'; });
-          if (tb) draftReply = tb.text;
-        }
-      } catch (e) { draftReply = ''; }
-      if (typeof draftReply !== 'string') draftReply = '';
+        claudeResult = await callClaude(SYSTEM_PROMPT, [
+          {
+            role: 'user',
+            content: existingThreadContext + orderContext + availableMacros + 'Draft a reply to this customer email. Customer name: ' + customerFirstName + '. Their message: ' + customerMessage + escalationNote
+          }
+        ], 1500);
+      } catch (apiErr) {
+        console.error('Claude API error for ticket ' + ticket_id + ':', JSON.stringify(apiErr.data || apiErr.message));
+        return;
+      }
+
+      if (claudeResult.truncated) {
+        // Never send a half-finished reply. Leave the ticket for a human instead.
+        console.error('Reply for ticket ' + ticket_id + ' was cut off — not sent, tagged for review');
+        var cutoffTags = tags.concat([{ name: 'Evie-Cutoff' }, { name: 'Christine-Review' }]);
+        await fetch(
+          'https://everformwear.gorgias.com/api/tickets/' + ticket_id,
+          {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': gorgiasAuth },
+            body: JSON.stringify({ tags: cutoffTags })
+          }
+        );
+        return;
+      }
+      draftReply = claudeResult.text;
     }
 
     if (!draftReply) {
