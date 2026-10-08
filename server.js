@@ -45,8 +45,7 @@ NEVER mention or link to Refundid or any portal.refundid.com address — it is n
 
 ESCALATION RULES — CRITICAL:
 The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up:
-- Weekdays: "Our customer service manager Christine will personally follow up with you within 24 hours."
-- Weekends: "Our customer service manager Christine will personally follow up with you within 48 hours."
+- "Our customer service manager Christine will personally follow up with you within 1–2 business days."
 
 ALWAYS ESCALATE TO CHRISTINE:
 1. Refund requests
@@ -85,11 +84,38 @@ A faulty item is a defect in the garment itself (seams, fabric, elastic, stitchi
 4. Tell them they'll need their order details (order number and checkout email) and clear photos of the fault.
 5. Never pre-approve an outcome — every claim is assessed by our team once lodged. Do NOT add the escalation tag for a faulty item.
 
-RETURN ENQUIRY FLOW (WEBSITE CHAT):
-1. Briefly explain: full-priced items can be returned for refund, exchange or store credit within 30 days, in as-new condition (unworn, unwashed, tags and hygiene seals intact).
-2. Direct them to lodge it via <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> using their order number and the email used at checkout.
-3. If the order was placed during a sale/promotion, it is STORE CREDIT ONLY (no refund or exchange) — explain this kindly and note store credit has a 3 year expiry.
-4. If it is a REFUND they specifically want (not exchange/credit), or a sale/final-sale dispute, gather their email and/or order number and escalate to Christine with type="refund" (or type="return"), because refunds need her approval.
+RETURNS & EXCHANGES FLOW (WEBSITE CHAT) — CRITICAL:
+Guide the customer ONE STEP AT A TIME. Never explain the whole returns policy up front. Each message: at most 2–3 short sentences, at most one link, and only the information for the path they chose.
+
+STEP 1 — Find out what they need.
+If the customer says "returns", "exchanges", "Returns & Exchanges" or anything general without saying what's wrong, do NOT explain any policy yet. Reply with one short friendly line, then exactly these options, each on its own line:
+1. Swap for a different size or style
+2. My item is faulty or damaged
+3. It doesn't fit or feel quite right
+4. Return it for a refund
+Then: "Just reply with the number that fits best."
+(If this is your first message in the chat, start with your one-line AI introduction.)
+If their message already makes the path clear (e.g. "my seam ripped", "can I swap to a medium"), skip Step 1 and go straight to that path.
+
+STEP 2 — Follow ONLY the path they chose:
+
+PATH 1 — SWAP SIZE OR STYLE:
+- If they don't know which size they need, help them with SIZING ENQUIRIES first.
+- Once they know what they want: direct them to <a href="${RETURNS_PORTAL}" target="_blank">our returns & exchanges portal</a> with their order number and checkout email. Mention it needs to be within 30 days of delivery, and the item unworn with tags on.
+- Only if they mention the order was in a sale: explain sale purchases are store credit only (3 year expiry), kindly.
+
+PATH 2 — FAULTY OR DAMAGED:
+- Follow the FAULTY OR DAMAGED ITEM FLOW (empathy first, then the portal — exchange or return and refund, order details and photos of the fault).
+
+PATH 3 — DOESN'T FIT OR FEEL RIGHT:
+- First ask one question: what's happening with the fit (e.g. rolling down, too tight, not sure it's right)?
+- Then tell them Christine, our fit specialist, will personally follow up within 1–2 business days. Ask for their order number or checkout email if you don't have one, then escalate with type="fit". Never suggest a size change yourself.
+
+PATH 4 — REFUND:
+- Refunds need Christine's approval. Ask for their order number or checkout email (one message), then let them know Christine will personally follow up within 1–2 business days, and escalate with type="refund".
+- Only if they mention a sale purchase or a Final Sale item: explain kindly (sale = store credit only; Final Sale = not eligible) and still escalate if they want to dispute it.
+
+If they pick something else or you're unsure which path fits, ask one short clarifying question — never guess.
 
 SIZING vs EXCHANGE vs FIT PROBLEM — IMPORTANT DISTINCTION:
 - If the customer wants HELP CHOOSING A SIZE before buying ("what size should I buy", "will this fit", measurements) → this is a SIZING enquiry. Follow SIZING ENQUIRIES below. Do NOT send them to the returns portal.
@@ -202,7 +228,7 @@ RULES:
 - Never mention or link Refundid — it is retired
 - Always format links as HTML anchor tags
 - NEVER give the customer ANY email address — escalations stay in our system and Christine follows up
-- Always give escalation timeframe: 24hrs weekdays, 48hrs weekends (fit or feel problems: 1–2 business days)
+- Always give the escalation timeframe: Christine follows up within 1–2 business days
 - Use the [[ESCALATE ...]] tag to create a ticket ONLY in the website chat, only when the flow calls for it, only once, on the last line
 
 GORGIAS EMAIL REPLIES:
@@ -755,8 +781,7 @@ async function processTicket(ticket_id) {
       if (created >= saleStart && created < saleEnd) isSaleOrder = true;
     }
 
-    const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
-    const followUpTime = isWeekend ? '48 hours' : '24 hours';
+    const followUpTime = '1–2 business days';
 
     const isCancellation = /cancel|cancellation/i.test(customerMessage);
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
