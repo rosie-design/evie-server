@@ -45,8 +45,7 @@ NEVER mention or link to Refundid or any portal.refundid.com address — it is n
 
 ESCALATION RULES — CRITICAL:
 The following situations must ALWAYS be escalated to Christine. Respond warmly and let the customer know Christine will personally follow up:
-- Weekdays: "Our customer service manager Christine will personally follow up with you within 24 hours."
-- Weekends: "Our customer service manager Christine will personally follow up with you within 48 hours."
+- "Our customer service manager Christine will personally follow up with you within 1–2 business days."
 
 ALWAYS ESCALATE TO CHRISTINE:
 1. Refund requests
@@ -113,7 +112,7 @@ PATH 3 — DOESN'T FIT OR FEEL RIGHT:
 - Then tell them Christine, our fit specialist, will personally follow up within 1–2 business days. Ask for their order number or checkout email if you don't have one, then escalate with type="fit". Never suggest a size change yourself.
 
 PATH 4 — REFUND:
-- Refunds need Christine's approval. Ask for their order number or checkout email (one message), then let them know Christine will personally follow up (24 hours weekdays, 48 hours weekends), and escalate with type="refund".
+- Refunds need Christine's approval. Ask for their order number or checkout email (one message), then let them know Christine will personally follow up within 1–2 business days, and escalate with type="refund".
 - Only if they mention a sale purchase or a Final Sale item: explain kindly (sale = store credit only; Final Sale = not eligible) and still escalate if they want to dispute it.
 
 If they pick something else or you're unsure which path fits, ask one short clarifying question — never guess.
@@ -229,7 +228,7 @@ RULES:
 - Never mention or link Refundid — it is retired
 - Always format links as HTML anchor tags
 - NEVER give the customer ANY email address — escalations stay in our system and Christine follows up
-- Always give escalation timeframe: 24hrs weekdays, 48hrs weekends (fit or feel problems: 1–2 business days)
+- Always give the escalation timeframe: Christine follows up within 1–2 business days
 - Use the [[ESCALATE ...]] tag to create a ticket ONLY in the website chat, only when the flow calls for it, only once, on the last line
 
 GORGIAS EMAIL REPLIES:
@@ -782,8 +781,7 @@ async function processTicket(ticket_id) {
       if (created >= saleStart && created < saleEnd) isSaleOrder = true;
     }
 
-    const isWeekend = [0, 6].indexOf(new Date().getDay()) !== -1;
-    const followUpTime = isWeekend ? '48 hours' : '24 hours';
+    const followUpTime = '1–2 business days';
 
     const isCancellation = /cancel|cancellation/i.test(customerMessage);
     const isRefundQuery = /refund|return|money back|reimburse/i.test(customerMessage);
